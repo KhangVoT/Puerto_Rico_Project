@@ -1,16 +1,22 @@
 # Project Name: Puerto Rico Project
 # Author: Khang Vo
 # Date Created: 9/19/2021
-# Date Last Modified: 10/01/2021
+# Date Last Modified: 2/13/2022
 # Python Version: 3.9
 
 import os
+import glob
 import time
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
 import reformat_hdf_res
-import study_area_constraint
+import study_area_hdf
+import study_area_res
+import stations_study_area
+import phase_filter
 import plot_statistics
 
 
@@ -18,9 +24,11 @@ import plot_statistics
 def main():
 
     # user specified working directory
+    stations_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_stations_list"
     raw_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/01_raw"
     reformatted_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/02_reformatted"
     study_area_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
+    phase_filter_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_phase_filter"
 
     # user specified year range of data
     year_min = 2000
@@ -28,19 +36,28 @@ def main():
     year_range = np.arange(year_min, year_max + 1, 1)
 
     # user specified study area data extent
-    lon_min = -69
-    lon_max = -60
-    lat_min = 16
-    lat_max = 21
+    lon_min = -80
+    lon_max = -55
+    lat_min = 5
+    lat_max = 25
 
-    # run reformat_hdf_res module
-    reformat_hdf_res.main(raw_path, reformatted_path, year_range)
+    # # run reformat_hdf_res module
+    # reformat_hdf_res.main(raw_path, reformatted_path, year_range)
+    #
+    # # run study_area_hdf module
+    # study_area_hdf.main(reformatted_path, study_area_path, lon_min, lon_max, lat_min, lat_max, year_range)
+    #
+    # # run study_area_res module
+    # study_area_res.main(reformatted_path, study_area_path, year_range)
 
-    # run data_constraints module
-    study_area_constraint.main(reformatted_path, study_area_path, lon_min, lon_max, lat_min, lat_max, year_range)
+    # run stations_study_area
+    stations_study_area.main(stations_path, study_area_path, lon_min, lon_max, lat_min, lat_max)
 
-    # run plot_stats module
-    plot_statistics.main(study_area_path, year_range)
+    # # run phase_filter module
+    # phase_filter.main(study_area_path, phase_filter_path)
+
+    # # run plot_statistics module
+    # plot_statistics.main(study_area_path, year_range)
 
 
 # run main()

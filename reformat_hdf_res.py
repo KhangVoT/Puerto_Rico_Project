@@ -5,7 +5,9 @@
 # Python Version: 3.9
 
 import os
+import glob
 import time
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -173,8 +175,12 @@ def import_res(file_list, year):
 def output_df(path, df, file_name):
 
     # output re-formated df to TXT file
-    outfile_hdf = path + "/reformated_" + file_name + ".txt"
-    df.to_csv(outfile_hdf, sep="\t", index=False)
+    if "_hdf" in file_name:
+        outfile_hdf = path + "/hdf/reformated_" + file_name + ".txt"
+        df.to_csv(outfile_hdf, sep="\t", index=False)
+    elif "_res" in file_name:
+        outfile_res = path + "/res/reformated_" + file_name + ".txt"
+        df.to_csv(outfile_res, sep="\t", index=False)
 
 
 # main function

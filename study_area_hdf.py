@@ -1,17 +1,19 @@
-# File Name: study_area_constraint
+# File Name: study_area_hdf
 # Author: Khang Vo
-# Date Created: 9/24/2021
-# Date Last Modified: 9/25/2021
+# Date Created: 2/13/2022
+# Date Last Modified: 2/13/2022
 # Python Version: 3.9
 
 import os
+import glob
 import time
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-# function to constrain hdf DataFrame to study area
+# function to constrain RES DataFrame to study area
 def study_area_hdf(df, lon_min, lon_max, lat_min, lat_max):
 
     df_zoned = df[(df["glon"].astype(float) >= lon_min) & (df["glon"].astype(float) <= lon_max) &
@@ -20,26 +22,11 @@ def study_area_hdf(df, lon_min, lon_max, lat_min, lat_max):
     return df_zoned
 
 
-# function to constrain hdf DataFrame to study area
-def study_area_res(df, lon_min, lon_max, lat_min, lat_max):
-
-    # ____________________________need to convert geographic coordinates to geodetic ___________________________________
-    lon_min *= 1  # do math here
-    lon_max *= 1  # do math here
-    lat_min *= 1  # do math here
-    lat_max *= 1  # do math here
-
-    df_zoned = df[(df["elon"].astype(float) >= lon_min) & (df["elon"].astype(float) <= lon_max) &
-                  (df["elat"].astype(float) >= lat_min) & (df["elat"].astype(float) <= lat_max)]
-
-    return df_zoned
-
-
 # function to write DataFrame to text file
 def output_df(path, df, file_name):
 
     # output re-formated df to TXT file
-    outfile_hdf = path + "/study_area_" + file_name[11:15] + ".txt"
+    outfile_hdf = path + "/hdf/study_area_" + file_name[11:15] + "_hdf.txt"
     df.to_csv(outfile_hdf, sep="\t", index=False)
 
 
@@ -47,17 +34,17 @@ def output_df(path, df, file_name):
 def output_merged_df(path, year_range):
 
     # define file list, and df list
-    file_list = sorted(os.listdir(path))
+    file_list = sorted(os.listdir(path + "/hdf"))
     df_list = []
 
     # merge df
     for file in file_list:
         if file.endswith(".txt") and int(file[11:15]) in year_range:
-            df_list.append(pd.read_csv(path + "/" + file, sep="\t"))
+            df_list.append(pd.read_csv(path + "/hdf/" + file, sep="\t"))
     df_merged = pd.concat(df_list)
 
     # output merged df to TXT file
-    outfile_merged_hdf = path + "/merged_" + str(min(year_range)) + "-" + str(max(year_range)) + ".txt"
+    outfile_merged_hdf = path + "/hdf/merged_" + str(min(year_range)) + "-" + str(max(year_range)) + "_hdf.txt"
     df_merged.to_csv(outfile_merged_hdf, sep="\t", index=False)
 
 
@@ -65,7 +52,7 @@ def output_merged_df(path, year_range):
 def main(reformatted_path, study_area_path, lon_min, lon_max, lat_min, lat_max, year_range):
 
     # changing to working directory and list all HDF/RES files
-    os.chdir(reformatted_path)
+    os.chdir(reformatted_path + "/hdf")
     file_list = sorted(os.listdir())
 
     # iterate through files in file list
@@ -74,10 +61,6 @@ def main(reformatted_path, study_area_path, lon_min, lon_max, lat_min, lat_max, 
             df_hdf = pd.read_csv(file, sep="\t")
             df_hdf_study = study_area_hdf(df_hdf, lon_min, lon_max, lat_min, lat_max)
             output_df(study_area_path, df_hdf_study, file)
-        # elif "_res" in file and int(file[11:15]) in year_range:
-        #     df_res = pd.read_csv(file, sep="\t")
-        #     df_res_study = study_area_hdf(df_res, lon_min, lon_max, lat_min, lat_max)
-        #     output_df(study_area_path, df_res_study, file)
 
     output_merged_df(study_area_path, year_range)
 
@@ -95,9 +78,9 @@ if __name__ == "__main__":
     year_range = np.arange(year_min, year_max + 1, 1)
 
     # user specified study area data extent
-    lon_min = -69
-    lon_max = -60
-    lat_min = 16
-    lat_max = 21
+    lon_min = -80
+    lon_max = -55
+    lat_min = 5
+    lat_max = 25
 
     main(input_path, output_path, lon_min, lon_max, lat_min, lat_max, year_range)
