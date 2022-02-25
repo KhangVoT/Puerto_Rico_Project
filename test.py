@@ -14,7 +14,7 @@ output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_Telet
 # create all1a.txt file
 df_hdf = pd.read_csv(hdf_path + "/merged_2000-2018_hdf.txt", sep="\t", low_memory=False)
 
-c_hdf = df_hdf[["iyr", "mon", "iday", "ihr", "min", "sec", "glat", "glon", "depth", "mb"]]
+c_hdf = df_hdf[["iyr", "mon", "iday", "ihr", "min", "sec", "glat", "glon", "depth", "ievt", "mb"]]
 
 c_hdf.to_csv(output_path + "/temp_all1a.txt", sep="\t", index=False)
 
@@ -29,6 +29,7 @@ with open(output_path + "/temp_all1a.txt", "r") as infile:
         # outfile.write("glat" + "\t")
         # outfile.write("glon" + "\t")
         # outfile.write("depth" + "\t")
+        # outfile.write("ievt" + "\t")
         # outfile.write("mb" + "\n")
         next(infile)
         for line in infile:
@@ -42,7 +43,8 @@ with open(output_path + "/temp_all1a.txt", "r") as infile:
             glat = fields[6]
             glon = fields[7]
             depth = fields[8]
-            mb = fields[9]
+            ievt = fields[9]
+            mb = fields[10]
             outfile.write(str(iyr).zfill(2) + str(mon).zfill(2) + str(iday).zfill(2) + "\t")
             outfile.write(str(ihr).zfill(2) + str(min).zfill(2) + str(format(float(sec), ".2f").zfill(5)) + "\t")
             outfile.write(glat + "\t")
@@ -50,7 +52,8 @@ with open(output_path + "/temp_all1a.txt", "r") as infile:
             outfile.write(depth + "\t")
             outfile.write(mb + "\t")
             outfile.write("0.0" + "\t" + "0.0" + "\t" + "0.0" + "\t")
-            outfile.write("0" + "\t" + "0" + "\n")
+            outfile.write(ievt + "\t")
+            outfile.write("0" + "\n")
 
 os.remove(output_path + "/temp_all1a.txt")
 
