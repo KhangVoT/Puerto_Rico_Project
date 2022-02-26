@@ -81,7 +81,7 @@ with open(output_path + "/temp_all1.txt", "r") as infile:
             phasej = fields[3]
             ievt = fields[4]
             if ievt not in ievt_seen:
-                outfile.write(ievt + "\n")
+                outfile.write("# " + ievt + "\n")
                 ievt_seen.add(ievt)
             outfile.write(sta + "\t")
             outfile.write(ttime + "\t")
