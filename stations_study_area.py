@@ -30,6 +30,8 @@ def main(stations_path, study_area_path, lon_min, lon_max, lat_min, lat_max):
     sta_zoned = sta[(sta["slon"].astype(float) >= lon_min) & (sta["slon"].astype(float) <= lon_max) &
                     (sta["slat"].astype(float) >= lat_min) & (sta["slat"].astype(float) <= lat_max)]
 
+    sta_zoned = sta_zoned.round({"slon": 2, "slat": 2})
+
     sta_zoned.to_csv(study_area_path + "/stations_zoned.txt",
                      sep="\t", index=False)
 
