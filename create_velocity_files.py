@@ -20,4 +20,4 @@ depth_list = df_reg["Depth"].unique()
 for i in depth_list:
     for j in long_list:
         for k in lat_list:
-            print(df_reg[])
+            print(df_reg["dVp"])
