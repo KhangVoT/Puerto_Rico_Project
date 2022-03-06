@@ -16,6 +16,8 @@ df_reg = pd.read_csv(input_path + "/ggge1202-sup-0002-ds01.txt", delim_whitespac
 lat_list = df_reg["Lat"].unique()
 long_list = df_reg["Long"].unique()
 depth_list = df_reg["Depth"].unique()
-print(lat_list)
-print(long_list)
-print(depth_list)
+
+for i in depth_list:
+    for j in long_list:
+        for k in lat_list:
+            print(df_reg[])
