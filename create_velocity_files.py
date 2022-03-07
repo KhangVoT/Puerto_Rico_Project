@@ -17,10 +17,6 @@ lat_unq = df_reg["Lat"].unique()
 long_unq = (df_reg["Long"].unique() - 180).round(2)
 depth_unq = df_reg["Depth"].unique()
 
-lat_list = df_reg["Lat"]
-long_list = (df_reg["Long"] - 180).round(2)
-depth_list = df_reg["Depth"]
-
 with open(output_path + "/glb.txt", "w") as outfile:
     for i in long_unq:
         outfile.write(str(i))
@@ -37,9 +33,9 @@ with open(output_path + "/glb.txt", "w") as outfile:
 
     index = 0
     for x in depth_unq:
-        for y in lat_unq:
-            for z in long_unq:
-                outfile.write(str(df_reg.iloc[index, 3]))
+        for y in long_unq:
+            for z in lat_unq:
+                outfile.write(str(format(df_reg.iloc[index, 3], ".2f")))
                 outfile.write(" ")
                 index += 1
             outfile.write("\n")
