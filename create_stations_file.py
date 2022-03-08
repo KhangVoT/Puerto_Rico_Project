@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 # main function:
-def main(stations_path, study_area_path, lon_min, lon_max, lat_min, lat_max):
+def main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max):
 
     sta = pd.read_csv(stations_path + "/stations_ehb.txt",
                       delim_whitespace=True, skiprows=3, skipfooter=5, engine="python")
@@ -32,8 +32,8 @@ def main(stations_path, study_area_path, lon_min, lon_max, lat_min, lat_max):
 
     sta_zoned = sta_zoned.round({"slon": 2, "slat": 2})
 
-    sta_zoned.to_csv(study_area_path + "/stations_zoned.txt",
-                     sep="\t", index=False)
+    sta_zoned.to_csv(teletomoDD_file_path + "/sta.txt",
+                     sep="\t", index=False, header=False)
 
 
 # run main()
@@ -47,6 +47,6 @@ if __name__ == "__main__":
 
     # user specified working directory
     input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_stations_list"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
+    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files"
 
     main(input_path, output_path, lon_min, lon_max, lat_min, lat_max)
