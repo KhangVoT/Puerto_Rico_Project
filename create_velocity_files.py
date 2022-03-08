@@ -22,6 +22,10 @@ def glb(velovity_file_path, teletomoDD_file_path):
     depth_unq = df_glb["Depth"].unique()
 
     with open(teletomoDD_file_path + "/glb.txt", "w") as outfile:
+        outfile.write("0.1")
+        outfile.write(str(len(long_unq)))
+        outfile.write(str(len(lat_unq)))
+        outfile.write(str(len(depth_unq)))
         for i in long_unq:
             outfile.write(str(i))
             outfile.write(" ")
@@ -56,6 +60,10 @@ def reg(velovity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat
     depth_unq = df_reg["Depth"].unique()
 
     with open(teletomoDD_file_path + "/glb.txt", "w") as outfile:
+        outfile.write("0.1")
+        outfile.write(str(len(long_unq)))
+        outfile.write(str(len(lat_unq)))
+        outfile.write(str(len(depth_unq)))
         for i in long_unq:
             outfile.write(str(i))
             outfile.write(" ")
