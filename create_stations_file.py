@@ -1,7 +1,7 @@
-# File Name: stations_study_area
+# File Name: create_stations_file
 # Author: Khang Vo
 # Date Created: 2/15/2022
-# Date Last Modified: 2/20/2022
+# Date Last Modified: 3/7/2022
 # Python Version: 3.9
 
 import os
@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 def main(stations_path, study_area_path, lon_min, lon_max, lat_min, lat_max):
 
     sta = pd.read_csv(stations_path + "/stations_ehb.txt",
-                      delim_whitespace=True)
+                      delim_whitespace=True, skiprows=3, skipfooter=5, engine="python")
 
     sta.columns = ["sta", "slat", "slon", "elev", "status"]
 

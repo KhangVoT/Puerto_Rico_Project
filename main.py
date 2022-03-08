@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import reformat_hdf_res
 import study_area_hdf
 import study_area_res
-import stations_study_area
+import create_stations_file
 import phase_filter
 import plot_statistics
 
