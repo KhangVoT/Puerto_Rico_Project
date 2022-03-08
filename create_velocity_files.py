@@ -100,5 +100,5 @@ if __name__ == "__main__":
     lat_min = 5
     lat_max = 25
 
-    # glb(input_path, output_path)
+    glb(input_path, output_path)
     reg(input_path, output_path, lon_min, lon_max, lat_min, lat_max)
