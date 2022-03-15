@@ -15,8 +15,10 @@ import matplotlib.pyplot as plt
 import reformat_hdf_res
 import study_area_hdf
 import study_area_res
-import create_stations_file
 import phase_filter
+import create_stations_file
+import create_event_files
+import create_velocity_files
 import plot_statistics
 
 
@@ -29,6 +31,8 @@ def main():
     reformatted_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/02_reformatted"
     study_area_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
     phase_filter_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_phase_filter"
+    velocity_file_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list"
+    teletomoDD_file_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files"
 
     # user specified year range of data
     year_min = 2000
@@ -50,11 +54,20 @@ def main():
     # # run study_area_res module
     # study_area_res.main(reformatted_path, study_area_path, year_range)
 
-    # run stations_study_area
-    stations_study_area.main(stations_path, study_area_path, lon_min, lon_max, lat_min, lat_max)
-
     # # run phase_filter module
     # phase_filter.main(study_area_path, phase_filter_path)
+
+    # run create_stations_file
+    create_stations_file.main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
+
+    # # run create_event_files
+    # create_event_files.()
+
+    # run create_velocity_files.glb
+    create_velocity_files.glb(velocity_file_path, teletomoDD_file_path)
+
+    # run create_velocity_files.reg
+    create_velocity_files.reg(velocity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
 
     # # run plot_statistics module
     # plot_statistics.main(study_area_path, year_range)

@@ -13,9 +13,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def glb(velovity_file_path, teletomoDD_file_path):
+def glb(velocity_file_path, teletomoDD_file_path):
     # create v_reg.txt file
-    df_glb = pd.read_csv(velovity_file_path + "/ggge1202-sup-0002-ds01.txt", delim_whitespace=True)
+    df_glb = pd.read_csv(velocity_file_path + "/ggge1202-sup-0002-ds01.txt", delim_whitespace=True)
 
     lat_unq = df_glb["Lat"].unique()
     long_unq = (df_glb["Long"].unique() - 180).round(2)
