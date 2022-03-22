@@ -45,9 +45,9 @@ def glb(velocity_file_path, teletomoDD_file_path):
         outfile.write("\n")
 
         index = 0
-        for x in depth_unq:
-            for y in long_unq:
-                for z in lat_unq:
+        for _ in depth_unq:
+            for _ in long_unq:
+                for _ in lat_unq:
                     outfile.write(str(format(df_glb.iloc[index, 3], ".2f")))
                     outfile.write(" ")
                     index += 1
@@ -55,9 +55,9 @@ def glb(velocity_file_path, teletomoDD_file_path):
 
 
 # reg function
-def reg(velovity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max):
+def reg(velocity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max):
     # create v_reg.txt file
-    df_reg = pd.read_csv(velovity_file_path + "/ggge1202-sup-0002-ds01.txt", delim_whitespace=True)
+    df_reg = pd.read_csv(velocity_file_path + "/ggge1202-sup-0002-ds01.txt", delim_whitespace=True)
     df_reg = df_reg[(df_reg["Lat"] >= lat_min) & (df_reg["Lat"] <= lat_max)]
     df_reg = df_reg[(df_reg["Long"] - 180 >= lon_min) & (df_reg["Long"] - 180 <= lon_max)]
 
@@ -88,9 +88,9 @@ def reg(velovity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat
         outfile.write("\n")
 
         index = 0
-        for x in depth_unq:
-            for y in long_unq:
-                for z in lat_unq:
+        for _ in depth_unq:
+            for _ in long_unq:
+                for _ in lat_unq:
                     outfile.write(str(format(df_reg.iloc[index, 3], ".2f")))
                     outfile.write(" ")
                     index += 1
