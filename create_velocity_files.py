@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+# glb function
 def glb(velocity_file_path, teletomoDD_file_path):
     # create v_reg.txt file
     df_glb = pd.read_csv(velocity_file_path + "/ggge1202-sup-0002-ds01.txt", delim_whitespace=True)
@@ -53,6 +54,7 @@ def glb(velocity_file_path, teletomoDD_file_path):
                 outfile.write("\n")
 
 
+# reg function
 def reg(velovity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max):
     # create v_reg.txt file
     df_reg = pd.read_csv(velovity_file_path + "/ggge1202-sup-0002-ds01.txt", delim_whitespace=True)

@@ -57,17 +57,20 @@ def main():
     # # run phase_filter module
     # phase_filter.main(study_area_path, phase_filter_path)
 
-    # run create_stations_file
-    create_stations_file.main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
-
-    # # run create_event_files
-    # create_event_files.()
-
-    # run create_velocity_files.glb
-    create_velocity_files.glb(velocity_file_path, teletomoDD_file_path)
-
-    # run create_velocity_files.reg
-    create_velocity_files.reg(velocity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
+    # # run create_stations_file
+    # create_stations_file.main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
+    #
+    # # run create_event_files all1a
+    # create_event_files.all1a(study_area_path + "/hdf", teletomoDD_file_path)
+    #
+    # # run create_event_files all1
+    # create_event_files.all1(phase_filter_path, teletomoDD_file_path)
+    #
+    # # run create_velocity_files.glb
+    # create_velocity_files.glb(velocity_file_path, teletomoDD_file_path)
+    #
+    # # run create_velocity_files.reg
+    # create_velocity_files.reg(velocity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
 
     # # run plot_statistics module
     # plot_statistics.main(study_area_path, year_range)
