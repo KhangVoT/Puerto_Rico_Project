@@ -113,35 +113,35 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
     vel_new = vel_new.round(4)
 
     # create regional absolute velocity file
-    with open(teletomoDD_file_path + "/reg_abs.txt", "w") as outfile_reg:
-        outfile_reg.write("0.1")
-        outfile_reg.write(" ")
-        outfile_reg.write(str(len(long_unq)))
-        outfile_reg.write(" ")
-        outfile_reg.write(str(len(lat_unq)))
-        outfile_reg.write(" ")
-        outfile_reg.write(str(len(depth_unq)))
-        outfile_reg.write("\n")
+    with open(teletomoDD_file_path + "/reg_abs.txt", "w") as outfile_abs:
+        outfile_abs.write("0.1")
+        outfile_abs.write(" ")
+        outfile_abs.write(str(len(long_unq)))
+        outfile_abs.write(" ")
+        outfile_abs.write(str(len(lat_unq)))
+        outfile_abs.write(" ")
+        outfile_abs.write(str(len(depth_unq)))
+        outfile_abs.write("\n")
         for i in long_unq:
-            outfile_reg.write(str(i))
-            outfile_reg.write(" ")
-        outfile_reg.write("\n")
+            outfile_abs.write(str(i))
+            outfile_abs.write(" ")
+        outfile_abs.write("\n")
         for j in lat_unq:
-            outfile_reg.write(str(j))
-            outfile_reg.write(" ")
-        outfile_reg.write("\n")
+            outfile_abs.write(str(j))
+            outfile_abs.write(" ")
+        outfile_abs.write("\n")
         for k in depth_unq:
-            outfile_reg.write(str(k))
-            outfile_reg.write(" ")
-        outfile_reg.write("\n")
+            outfile_abs.write(str(k))
+            outfile_abs.write(" ")
+        outfile_abs.write("\n")
 
         m = 0
         for _ in depth_unq:
             for _ in lat_unq:
                 for _ in long_unq:
-                    outfile_reg.write(str(format(vel_new[m], ".2f")))
-                    outfile_reg.write(" ")
-                outfile_reg.write("\n")
+                    outfile_abs.write(str(format(vel_new[m], ".2f")))
+                    outfile_abs.write(" ")
+                outfile_abs.write("\n")
             m += 1
 
     # create regional perturbation velocity file
