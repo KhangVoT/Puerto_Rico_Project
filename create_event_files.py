@@ -13,16 +13,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# all1a function
-def all1a(hdf_path, output_path):
+# event function
+def event(hdf_path, output_path):
     df_hdf = pd.read_csv(hdf_path + "/merged_2000-2018_hdf.txt", sep="\t", low_memory=False)
 
     c_hdf = df_hdf[["iyr", "mon", "iday", "ihr", "min", "sec", "glat", "glon", "depth", "ievt", "mb"]]
 
-    c_hdf.to_csv(output_path + "/temp_all1a.txt", sep="\t", index=False)
+    c_hdf.to_csv(output_path + "/temp_event.txt", sep="\t", index=False)
 
-    with open(output_path + "/temp_all1a.txt", "r") as infile:
-        with open(output_path + "/all1a.txt", "w") as outfile:
+    with open(output_path + "/temp_event.txt", "r") as infile:
+        with open(output_path + "/event.txt", "w") as outfile:
             # outfile.write("iyr" + "\t")
             # outfile.write("mon" + "\t")
             # outfile.write("iday" + "\t")
@@ -58,21 +58,21 @@ def all1a(hdf_path, output_path):
                 outfile.write(ievt + "\t")
                 outfile.write("0" + "\n")
 
-    os.remove(output_path + "/temp_all1a.txt")
+    os.remove(output_path + "/temp_event.txt")
 
 
-# all1 function
-def all1(res_path, output_path):
+# abs function
+def abs(res_path, output_path):
     df_res = pd.read_csv(res_path + "/P_filter.txt", sep="\t", low_memory=False)
 
     c_res = df_res[["sta", "ttime", "wgt", "phasej", "ievt"]]
 
-    c_res.to_csv(output_path + "/temp_all1.txt", sep="\t", index=False)
+    c_res.to_csv(output_path + "/temp_abs.txt", sep="\t", index=False)
 
     ievt_seen = set()
 
-    with open(output_path + "/temp_all1.txt", "r") as infile:
-        with open(output_path + "/all1.txt", "w") as outfile:
+    with open(output_path + "/temp_abs.txt", "r") as infile:
+        with open(output_path + "/abs.txt", "w") as outfile:
             # outfile.write("sta" + "\t")
             # outfile.write("ttime" + "\t")
             # outfile.write("wgt" + "\t")
@@ -93,7 +93,7 @@ def all1(res_path, output_path):
                 outfile.write(wgt + "\t")
                 outfile.write(phasej + "\n")
 
-    os.remove(output_path + "/temp_all1.txt")
+    os.remove(output_path + "/temp_abs.txt")
 
 
 if __name__ == "__main__":
@@ -103,5 +103,5 @@ if __name__ == "__main__":
     res_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_phase_filter"
     output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files"
 
-    all1a(hdf_path, output_path)
-    all1(res_path, output_path)
+    event(hdf_path, output_path)
+    abs(res_path, output_path)

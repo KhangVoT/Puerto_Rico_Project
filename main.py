@@ -54,25 +54,25 @@ def main():
     #
     # # run study_area_res module
     # study_area_res.main(reformatted_path, study_area_path, year_range)
-
+    #
     # # run phase_filter module
     # phase_filter.main(study_area_path, phase_filter_path)
-
+    #
     # # run create_stations_file
     # create_stations_file.main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
     #
     # # run create_event_files all1a
-    # create_event_files.all1a(study_area_path + "/hdf", teletomoDD_file_path)
+    # create_event_files.event(study_area_path + "/hdf", teletomoDD_file_path)
     #
     # # run create_event_files all1
-    # create_event_files.all1(phase_filter_path, teletomoDD_file_path)
+    # create_event_files.abs(phase_filter_path, teletomoDD_file_path)
     #
     # # run create_velocity_files.glb
     # create_velocity_files.glb(ak135_file, mit_file, teletomoDD_file_path)
     #
     # # run create_velocity_files.reg
     # create_velocity_files.reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
-
+    #
     # # run plot_statistics module
     # plot_statistics.main(study_area_path, year_range)
 
