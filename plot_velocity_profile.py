@@ -14,6 +14,10 @@ depth_new = mit["Depth"].unique()
 vel_new = np.interp(depth_new, depth, velP)
 vel_new = vel_new.round(4)
 
+for i in range(len(vel_new)):
+    print(vel_new[i])
+print(vel_new)
+
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 ax.plot(velP, depth, "g-", vel_new, depth_new, "or", linewidth=1.5)
