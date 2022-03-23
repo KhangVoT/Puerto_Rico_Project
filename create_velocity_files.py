@@ -55,7 +55,7 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
         for _ in depth_unq:
             for _ in long_unq:
                 for _ in lat_unq:
-                    outfile_abs.write(str(format((vel_new[m], ".2f"))))
+                    outfile_abs.write(str(format(vel_new[m], ".2f")))
                     outfile_abs.write(" ")
                 outfile_abs.write("\n")
             m += 1
@@ -139,7 +139,7 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
         for _ in depth_unq:
             for _ in long_unq:
                 for _ in lat_unq:
-                    outfile_reg.write(str(format((vel_new[m], ".2f"))))
+                    outfile_reg.write(str(format(vel_new[m], ".2f")))
                     outfile_reg.write(" ")
                 outfile_reg.write("\n")
             m += 1
