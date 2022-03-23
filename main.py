@@ -31,7 +31,8 @@ def main():
     reformatted_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/02_reformatted"
     study_area_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
     phase_filter_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_phase_filter"
-    velocity_file_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list"
+    ak135_file = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ak135.txt"
+    mit_file = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ggge1202-sup-0002-ds01.txt"
     teletomoDD_file_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files"
 
     # user specified year range of data
@@ -67,10 +68,10 @@ def main():
     # create_event_files.all1(phase_filter_path, teletomoDD_file_path)
     #
     # # run create_velocity_files.glb
-    # create_velocity_files.glb(velocity_file_path, teletomoDD_file_path)
+    # create_velocity_files.glb(ak135_file, mit_file, teletomoDD_file_path)
     #
     # # run create_velocity_files.reg
-    # create_velocity_files.reg(velocity_file_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
+    # create_velocity_files.reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
 
     # # run plot_statistics module
     # plot_statistics.main(study_area_path, year_range)
