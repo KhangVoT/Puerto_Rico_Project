@@ -88,7 +88,7 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
         for _ in depth_unq:
             for _ in long_unq:
                 for _ in lat_unq:
-                    outfile_perturb.write(str(format((vel_new[n] * (1 + df_glb.iloc[m, 3])), ".2f")))
+                    outfile_perturb.write(str(format((vel_new[n] * (1 + df_glb.iloc[m, 3] / 100)), ".2f")))
                     outfile_perturb.write(" ")
                     m += 1
                 outfile_perturb.write("\n")
@@ -172,7 +172,7 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
         for _ in depth_unq:
             for _ in long_unq:
                 for _ in lat_unq:
-                    outfile_perturb.write(str(format((vel_new[n] * (1 + df_reg.iloc[m, 3])), ".2f")))
+                    outfile_perturb.write(str(format((vel_new[n] * (1 + df_reg.iloc[m, 3] / 100)), ".2f")))
                     outfile_perturb.write(" ")
                     m += 1
                 outfile_perturb.write("\n")
