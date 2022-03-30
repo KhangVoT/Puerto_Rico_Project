@@ -21,10 +21,10 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
     long_unq = (df_glb["Long"].unique() - 180).round(2)
     depth_unq = df_glb["Depth"].unique()
 
-    long_unq[0] = -180
-    long_unq[-1] = 180
     lat_unq[0] = -90
     lat_unq[-1] = 90
+    long_unq[0] = -180
+    long_unq[-1] = 180
     depth_unq = np.insert(depth_unq, 0, -100)
 
     ak135 = pd.read_csv(ak135_file, delim_whitespace=True, header=None, skiprows=1)
