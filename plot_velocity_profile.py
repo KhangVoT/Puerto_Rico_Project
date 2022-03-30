@@ -10,6 +10,7 @@ velP = ak135.iloc[:, 1]
 mit = pd.read_csv("/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ggge1202-sup-0002-ds01.txt",
                   delim_whitespace=True)
 depth_new = mit["Depth"].unique()
+depth_new = np.insert(depth_new, 0, -100)
 
 vel_new = np.interp(depth_new, depth, velP)
 vel_new = vel_new.round(4)
