@@ -95,7 +95,7 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
             for _ in lat_unq:
                 for _ in long_unq:
                     if i < 0:
-                        outfile_abs.write(str(format(vel_new[n], ".2f")))
+                        outfile_perturb.write(str(format(vel_new[n], ".2f")))
                     outfile_perturb.write(str(format((vel_new[n] * (1 + df_glb.iloc[m, 3] / 100)), ".2f")))
                     outfile_perturb.write(" ")
                     m += 1
