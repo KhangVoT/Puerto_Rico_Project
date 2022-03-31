@@ -209,7 +209,7 @@ if __name__ == "__main__":
     lon_max = -55
     lat_min = 5
     lat_max = 25
-    depth_max = 1000
+    depth_max = 700
 
     glb(ak135_file, mit_file, output_path)
     reg(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
