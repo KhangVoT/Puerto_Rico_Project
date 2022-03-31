@@ -115,6 +115,8 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
     long_unq = (df_reg["Long"].unique() - 180).round(2)
     depth_unq = df_reg["Depth"].unique()
 
+    depth_unq = np.insert(depth_unq, 0, -100)
+
     ak135 = pd.read_csv(ak135_file, delim_whitespace=True, header=None, skiprows=1)
 
     depth = ak135.iloc[:, 0]
@@ -179,12 +181,16 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
 
         m = 0
         n = 0
-        for _ in depth_unq:
+        for i in depth_unq:
             for _ in lat_unq:
                 for _ in long_unq:
-                    outfile_perturb.write(str(format((vel_new[n] * (1 + df_reg.iloc[m, 3] / 100)), ".2f")))
-                    outfile_perturb.write(" ")
-                    m += 1
+                    if i < 0:
+                        outfile_perturb.write(str(format(vel_new[n], ".2f")))
+                        outfile_perturb.write(" ")
+                    else:
+                        outfile_perturb.write(str(format((vel_new[n] * (1 + df_reg.iloc[m, 3] / 100)), ".2f")))
+                        outfile_perturb.write(" ")
+                        m += 1
                 outfile_perturb.write("\n")
             n += 1
 
