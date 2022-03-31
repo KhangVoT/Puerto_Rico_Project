@@ -106,10 +106,11 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
 
 
 # reg function
-def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max):
+def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_max):
     df_reg = pd.read_csv(mit_file, delim_whitespace=True)
     df_reg = df_reg[(df_reg["Lat"] >= lat_min) & (df_reg["Lat"] <= lat_max)]
     df_reg = df_reg[(df_reg["Long"] - 180 >= lon_min) & (df_reg["Long"] - 180 <= lon_max)]
+    df_reg = df_reg[(df_reg["Depth"] <= depth_max)]
 
     lat_unq = df_reg["Lat"].unique()
     long_unq = (df_reg["Long"].unique() - 180).round(2)
@@ -208,6 +209,7 @@ if __name__ == "__main__":
     lon_max = -55
     lat_min = 5
     lat_max = 25
+    depth_max = 1000
 
     glb(ak135_file, mit_file, output_path)
-    reg(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max)
+    reg(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)

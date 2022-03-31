@@ -45,6 +45,7 @@ def main():
     lon_max = -55
     lat_min = 5
     lat_max = 25
+    depth_max = 1000
 
     # # run reformat_hdf_res module
     # reformat_hdf_res.main(raw_path, reformatted_path, year_range)
@@ -71,7 +72,7 @@ def main():
     # create_velocity_files.glb(ak135_file, mit_file, teletomoDD_file_path)
     #
     # # run create_velocity_files.reg
-    # create_velocity_files.reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
+    # create_velocity_files.reg(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
     #
     # # run plot_statistics module
     # plot_statistics.main(study_area_path, year_range)
