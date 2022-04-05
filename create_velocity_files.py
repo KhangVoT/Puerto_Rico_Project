@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 4/4/2022
+# Date Last Modified: 4/5/2022
 # Python Version: 3.9
 
 import os
@@ -145,7 +145,10 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
     # create global perturbation velocity file
     output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_perturb")
 
+    # create plot friendly global absolute velocity file
     plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_abs")
+
+    # create plot friendly global perturbation velocity file
     plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_perturb")
 
 
@@ -176,7 +179,10 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
     # create regional perturbation velocity file
     output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_perturb")
 
+    # create plot friendly regional absolute velocity file
     plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_abs")
+
+    # create plot friendly regional perturbation velocity file
     plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_perturb")
 
 
