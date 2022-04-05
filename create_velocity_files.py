@@ -13,6 +13,55 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, file_name):
+    with open(teletomoDD_file_path + "/" + file_name + ".txt", "w") as outfile:
+        outfile.write("0.1")
+        outfile.write(" ")
+        outfile.write(str(len(long_unq)))
+        outfile.write(" ")
+        outfile.write(str(len(lat_unq)))
+        outfile.write(" ")
+        outfile.write(str(len(depth_unq)))
+        outfile.write("\n")
+        for i in long_unq:
+            outfile.write(str(i))
+            outfile.write(" ")
+        outfile.write("\n")
+        for j in lat_unq:
+            outfile.write(str(j))
+            outfile.write(" ")
+        outfile.write("\n")
+        for k in depth_unq:
+            outfile.write(str(k))
+            outfile.write(" ")
+        outfile.write("\n")
+
+        if "_abs" in file_name:
+            m = 0
+            for _ in depth_unq:
+                for _ in lat_unq:
+                    for _ in long_unq:
+                        outfile.write(str(format(vel_new[m], ".2f")))
+                        outfile.write(" ")
+                    outfile.write("\n")
+                m += 1
+        elif "_perturb" in file_name:
+            m = 0
+            n = 0
+            for i in depth_unq:
+                for _ in lat_unq:
+                    for _ in long_unq:
+                        if i < 0:
+                            outfile.write(str(format(vel_new[n], ".2f")))
+                            outfile.write(" ")
+                        else:
+                            outfile.write(str(format((vel_new[n] * (1 + dvp.iloc[m] / 100)), ".2f")))
+                            outfile.write(" ")
+                            m += 1
+                    outfile.write("\n")
+                n += 1
+
+
 # glb function
 def glb(ak135_file, mit_file, teletomoDD_file_path):
     df_glb = pd.read_csv(mit_file, delim_whitespace=True)
@@ -20,6 +69,7 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
     lat_unq = df_glb["Lat"].unique()
     long_unq = (df_glb["Long"].unique() - 180).round(2)
     depth_unq = df_glb["Depth"].unique()
+    dvp = df_glb["dVp"]
 
     lat_unq[0] = -90
     lat_unq[-1] = 90
@@ -35,74 +85,10 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
     vel_new = vel_new.round(4)
 
     # create global absolute velocity file
-    with open(teletomoDD_file_path + "/glb_abs.txt", "w") as outfile_abs:
-        outfile_abs.write("0.1")
-        outfile_abs.write(" ")
-        outfile_abs.write(str(len(long_unq)))
-        outfile_abs.write(" ")
-        outfile_abs.write(str(len(lat_unq)))
-        outfile_abs.write(" ")
-        outfile_abs.write(str(len(depth_unq)))
-        outfile_abs.write("\n")
-        for i in long_unq:
-            outfile_abs.write(str(i))
-            outfile_abs.write(" ")
-        outfile_abs.write("\n")
-        for j in lat_unq:
-            outfile_abs.write(str(j))
-            outfile_abs.write(" ")
-        outfile_abs.write("\n")
-        for k in depth_unq:
-            outfile_abs.write(str(k))
-            outfile_abs.write(" ")
-        outfile_abs.write("\n")
-
-        m = 0
-        for _ in depth_unq:
-            for _ in lat_unq:
-                for _ in long_unq:
-                    outfile_abs.write(str(format(vel_new[m], ".2f")))
-                    outfile_abs.write(" ")
-                outfile_abs.write("\n")
-            m += 1
+    output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_abs")
 
     # create global perturbation velocity file
-    with open(teletomoDD_file_path + "/glb_perturb.txt", "w") as outfile_perturb:
-        outfile_perturb.write("0.1")
-        outfile_perturb.write(" ")
-        outfile_perturb.write(str(len(long_unq)))
-        outfile_perturb.write(" ")
-        outfile_perturb.write(str(len(lat_unq)))
-        outfile_perturb.write(" ")
-        outfile_perturb.write(str(len(depth_unq)))
-        outfile_perturb.write("\n")
-        for i in long_unq:
-            outfile_perturb.write(str(i))
-            outfile_perturb.write(" ")
-        outfile_perturb.write("\n")
-        for j in lat_unq:
-            outfile_perturb.write(str(j))
-            outfile_perturb.write(" ")
-        outfile_perturb.write("\n")
-        for k in depth_unq:
-            outfile_perturb.write(str(k))
-            outfile_perturb.write(" ")
-        outfile_perturb.write("\n")
-
-        m = 0
-        n = 0
-        for i in depth_unq:
-            for _ in lat_unq:
-                for _ in long_unq:
-                    if i < 0:
-                        outfile_perturb.write(str(format(vel_new[n], ".2f")))
-                        outfile_perturb.write(" ")
-                    else:
-                        outfile_perturb.write(str(format((vel_new[n] * (1 + df_glb.iloc[m, 3] / 100)), ".2f")))
-                        outfile_perturb.write(" ")
-                        m += 1
-                outfile_perturb.write("\n")
-            n += 1
+    output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_perturb")
 
 
 # reg function
@@ -115,6 +101,7 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
     lat_unq = df_reg["Lat"].unique()
     long_unq = (df_reg["Long"].unique() - 180).round(2)
     depth_unq = df_reg["Depth"].unique()
+    dvp = df_reg["dVp"]
 
     depth_unq = np.insert(depth_unq, 0, -100)
 
@@ -126,74 +113,10 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
     vel_new = vel_new.round(4)
 
     # create regional absolute velocity file
-    with open(teletomoDD_file_path + "/reg_abs.txt", "w") as outfile_abs:
-        outfile_abs.write("0.1")
-        outfile_abs.write(" ")
-        outfile_abs.write(str(len(long_unq)))
-        outfile_abs.write(" ")
-        outfile_abs.write(str(len(lat_unq)))
-        outfile_abs.write(" ")
-        outfile_abs.write(str(len(depth_unq)))
-        outfile_abs.write("\n")
-        for i in long_unq:
-            outfile_abs.write(str(i))
-            outfile_abs.write(" ")
-        outfile_abs.write("\n")
-        for j in lat_unq:
-            outfile_abs.write(str(j))
-            outfile_abs.write(" ")
-        outfile_abs.write("\n")
-        for k in depth_unq:
-            outfile_abs.write(str(k))
-            outfile_abs.write(" ")
-        outfile_abs.write("\n")
-
-        m = 0
-        for _ in depth_unq:
-            for _ in lat_unq:
-                for _ in long_unq:
-                    outfile_abs.write(str(format(vel_new[m], ".2f")))
-                    outfile_abs.write(" ")
-                outfile_abs.write("\n")
-            m += 1
+    output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_abs")
 
     # create regional perturbation velocity file
-    with open(teletomoDD_file_path + "/reg_perturb.txt", "w") as outfile_perturb:
-        outfile_perturb.write("0.1")
-        outfile_perturb.write(" ")
-        outfile_perturb.write(str(len(long_unq)))
-        outfile_perturb.write(" ")
-        outfile_perturb.write(str(len(lat_unq)))
-        outfile_perturb.write(" ")
-        outfile_perturb.write(str(len(depth_unq)))
-        outfile_perturb.write("\n")
-        for i in long_unq:
-            outfile_perturb.write(str(i))
-            outfile_perturb.write(" ")
-        outfile_perturb.write("\n")
-        for j in lat_unq:
-            outfile_perturb.write(str(j))
-            outfile_perturb.write(" ")
-        outfile_perturb.write("\n")
-        for k in depth_unq:
-            outfile_perturb.write(str(k))
-            outfile_perturb.write(" ")
-        outfile_perturb.write("\n")
-
-        m = 0
-        n = 0
-        for i in depth_unq:
-            for _ in lat_unq:
-                for _ in long_unq:
-                    if i < 0:
-                        outfile_perturb.write(str(format(vel_new[n], ".2f")))
-                        outfile_perturb.write(" ")
-                    else:
-                        outfile_perturb.write(str(format((vel_new[n] * (1 + df_reg.iloc[m, 3] / 100)), ".2f")))
-                        outfile_perturb.write(" ")
-                        m += 1
-                outfile_perturb.write("\n")
-            n += 1
+    output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_perturb")
 
 
 # run main()
