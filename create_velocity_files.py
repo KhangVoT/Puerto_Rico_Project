@@ -57,9 +57,9 @@ def plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_pa
                         else:
                             outfile.write(str(format(lat_unq[k], ".2f")))
                             outfile.write("\t")
-                            outfile.write(str(format(long_unq[k], ".2f")))
+                            outfile.write(str(format(long_unq[j], ".2f")))
                             outfile.write("\t")
-                            outfile.write(str(format(depth_unq[k], ".1f")))
+                            outfile.write(str(format(depth_unq[i], ".1f")))
                             outfile.write("\t")
                             outfile.write(str(format((vel_new[n] * (1 + dvp.iloc[m] / 100)), ".2f")))
                             outfile.write("\n")
