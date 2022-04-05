@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 3/22/2022
+# Date Last Modified: 4/4/2022
 # Python Version: 3.9
 
 import os
@@ -13,6 +13,61 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+# function to create plot friendly file:
+def plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, file_name):
+    with open(teletomoDD_file_path + "/" + file_name + "_plot_friendly.txt", "w") as outfile:
+        outfile.write("Lat")
+        outfile.write("\t")
+        outfile.write("Long")
+        outfile.write("\t")
+        outfile.write("Depth")
+        outfile.write("\t")
+        outfile.write("dVp")
+        outfile.write("\n")
+
+        if "_abs" in file_name:
+            m = 0
+            for i in range(len(depth_unq)):
+                for j in range(len(long_unq)):
+                    for k in range(len(lat_unq)):
+                        outfile.write(str(format(lat_unq[k], ".2f")))
+                        outfile.write("\t")
+                        outfile.write(str(format(long_unq[j], ".2f")))
+                        outfile.write("\t")
+                        outfile.write(str(format(depth_unq[i], ".1f")))
+                        outfile.write("\t")
+                        outfile.write(str(format(vel_new[m], ".2f")))
+                        outfile.write("\n")
+                m += 1
+        elif "_perturb" in file_name:
+            m = 0
+            n = 0
+            for i in range(len(depth_unq)):
+                for j in range(len(long_unq)):
+                    for k in range(len(lat_unq)):
+                        if i < 0:
+                            outfile.write(str(format(lat_unq[k], ".2f")))
+                            outfile.write("\t")
+                            outfile.write(str(format(long_unq[j], ".2f")))
+                            outfile.write("\t")
+                            outfile.write(str(format(depth_unq[i], ".1f")))
+                            outfile.write("\t")
+                            outfile.write(str(format(vel_new[n], ".2f")))
+                            outfile.write("\n")
+                        else:
+                            outfile.write(str(format(lat_unq[k], ".2f")))
+                            outfile.write("\t")
+                            outfile.write(str(format(long_unq[k], ".2f")))
+                            outfile.write("\t")
+                            outfile.write(str(format(depth_unq[k], ".1f")))
+                            outfile.write("\t")
+                            outfile.write(str(format((vel_new[n] * (1 + dvp.iloc[m] / 100)), ".2f")))
+                            outfile.write("\n")
+                            m += 1
+                n += 1
+
+
+# function to write DataFrame to text file
 def output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, file_name):
     with open(teletomoDD_file_path + "/" + file_name + ".txt", "w") as outfile:
         outfile.write("0.1")
@@ -62,7 +117,7 @@ def output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, 
                 n += 1
 
 
-# glb function
+# function to calculate global velocity model
 def glb(ak135_file, mit_file, teletomoDD_file_path):
     df_glb = pd.read_csv(mit_file, delim_whitespace=True)
 
@@ -90,8 +145,11 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
     # create global perturbation velocity file
     output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_perturb")
 
+    plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_abs")
+    plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_perturb")
 
-# reg function
+
+# function to calculate regional velocity model
 def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_max):
     df_reg = pd.read_csv(mit_file, delim_whitespace=True)
     df_reg = df_reg[(df_reg["Lat"] >= lat_min) & (df_reg["Lat"] <= lat_max)]
@@ -117,6 +175,9 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
 
     # create regional perturbation velocity file
     output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_perturb")
+
+    plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_abs")
+    plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_perturb")
 
 
 # run main()
