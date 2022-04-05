@@ -27,14 +27,14 @@ def plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_pa
 
         if "_abs" in file_name:
             m = 0
-            for i in range(len(depth_unq)):
-                for j in range(len(long_unq)):
-                    for k in range(len(lat_unq)):
-                        outfile.write(str(format(lat_unq[k], ".2f")))
+            for i in depth_unq:
+                for j in long_unq:
+                    for k in lat_unq:
+                        outfile.write(str(format(k, ".2f")))
                         outfile.write("\t")
-                        outfile.write(str(format(long_unq[j], ".2f")))
+                        outfile.write(str(format(j, ".2f")))
                         outfile.write("\t")
-                        outfile.write(str(format(depth_unq[i], ".1f")))
+                        outfile.write(str(format(i, ".1f")))
                         outfile.write("\t")
                         outfile.write(str(format(vel_new[m], ".2f")))
                         outfile.write("\n")
@@ -42,24 +42,24 @@ def plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_pa
         elif "_perturb" in file_name:
             m = 0
             n = 0
-            for i in range(len(depth_unq)):
-                for j in range(len(long_unq)):
-                    for k in range(len(lat_unq)):
+            for i in depth_unq:
+                for j in long_unq:
+                    for k in lat_unq:
                         if i < 0:
-                            outfile.write(str(format(lat_unq[k], ".2f")))
+                            outfile.write(str(format(k, ".2f")))
                             outfile.write("\t")
-                            outfile.write(str(format(long_unq[j], ".2f")))
+                            outfile.write(str(format(j, ".2f")))
                             outfile.write("\t")
-                            outfile.write(str(format(depth_unq[i], ".1f")))
+                            outfile.write(str(format(i, ".1f")))
                             outfile.write("\t")
                             outfile.write(str(format(vel_new[n], ".2f")))
                             outfile.write("\n")
                         else:
-                            outfile.write(str(format(lat_unq[k], ".2f")))
+                            outfile.write(str(format(k, ".2f")))
                             outfile.write("\t")
-                            outfile.write(str(format(long_unq[j], ".2f")))
+                            outfile.write(str(format(j, ".2f")))
                             outfile.write("\t")
-                            outfile.write(str(format(depth_unq[i], ".1f")))
+                            outfile.write(str(format(i, ".1f")))
                             outfile.write("\t")
                             outfile.write(str(format((vel_new[n] * (1 + dvp.iloc[m] / 100)), ".2f")))
                             outfile.write("\n")
