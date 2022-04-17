@@ -36,7 +36,7 @@ def main():
     teletomoDD_file_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files"
 
     # user specified year range of data
-    year_min = 2000
+    year_min = 1964
     year_max = 2018
     year_range = np.arange(year_min, year_max + 1, 1)
 
@@ -47,33 +47,33 @@ def main():
     lat_max = 25
     depth_max = 1000
 
-    # # run reformat_hdf_res module
-    # reformat_hdf_res.main(raw_path, reformatted_path, year_range)
-    #
-    # # run study_area_hdf module
-    # study_area_hdf.main(reformatted_path, study_area_path, lon_min, lon_max, lat_min, lat_max, year_range)
-    #
-    # # run study_area_res module
-    # study_area_res.main(reformatted_path, study_area_path, year_range)
-    #
-    # # run phase_filter module
-    # phase_filter.main(study_area_path, phase_filter_path)
-    #
-    # # run create_stations_file
-    # create_stations_file.main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
-    #
-    # # run create_event_files all1a
-    # create_event_files.event(study_area_path + "/hdf", teletomoDD_file_path)
-    #
-    # # run create_event_files all1
-    # create_event_files.abs(phase_filter_path, teletomoDD_file_path)
-    #
-    # # run create_velocity_files.glb
-    # create_velocity_files.glb(ak135_file, mit_file, teletomoDD_file_path)
-    #
-    # # run create_velocity_files.reg
-    # create_velocity_files.reg(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
-    #
+    # run reformat_hdf_res module
+    reformat_hdf_res.main(raw_path, reformatted_path, year_range)
+
+    # run study_area_hdf module
+    study_area_hdf.main(reformatted_path, study_area_path, lon_min, lon_max, lat_min, lat_max, year_range)
+
+    # run study_area_res module
+    study_area_res.main(reformatted_path, study_area_path, year_range)
+
+    # run phase_filter module
+    phase_filter.main(study_area_path, phase_filter_path)
+
+    # run create_stations_file
+    create_stations_file.main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
+
+    # run create_event_files all1a
+    create_event_files.event(study_area_path + "/hdf", teletomoDD_file_path)
+
+    # run create_event_files all1
+    create_event_files.abs(phase_filter_path, teletomoDD_file_path)
+
+    # run create_velocity_files.glb
+    create_velocity_files.glb(ak135_file, mit_file, teletomoDD_file_path)
+
+    # run create_velocity_files.reg
+    create_velocity_files.reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_max)
+
     # # run plot_statistics module
     # plot_statistics.main(study_area_path, year_range)
 
