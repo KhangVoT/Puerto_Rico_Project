@@ -27,13 +27,16 @@ def main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max
         if sta.loc[i, "slon"] > 180:
             sta.loc[i, "slon"] = sta.loc[i, "slon"] - 360
 
+    sta = sta.round({"slon": 2, "slat": 2})
+
+    sta.to_csv(teletomoDD_file_path + "/sta.txt", sep="\t", index=False, header=False)
+
     sta_zoned = sta[(sta["slon"].astype(float) >= lon_min) & (sta["slon"].astype(float) <= lon_max) &
                     (sta["slat"].astype(float) >= lat_min) & (sta["slat"].astype(float) <= lat_max)]
 
     sta_zoned = sta_zoned.round({"slon": 2, "slat": 2})
 
-    sta_zoned.to_csv(teletomoDD_file_path + "/sta.txt",
-                     sep="\t", index=False, header=False)
+    sta_zoned.to_csv(teletomoDD_file_path + "/sta_reg.txt", sep="\t", index=False, header=False)
 
 
 # run main()
