@@ -47,17 +47,17 @@ def interp(points, values, mit_file):
                 for depth in depth_request:
                     for long in long_request:
                         for lat in lat_request:
-                            outfile.write(str(lat))
+                            outfile.write(str(format(lat, ".2f")))
                             outfile.write("\t")
-                            outfile.write(str(long))
+                            outfile.write(str(format(long, ".2f")))
                             outfile.write("\t")
-                            outfile.write(str(depth))
+                            outfile.write(str(format(depth, ".1f")))
                             outfile.write("\t")
 
                             dvp_request = np.array([lat, long, depth])
                             dvp = interpn(points, values, dvp_request, method="linear", bounds_error=False,
                                           fill_value=None)
-                            outfile.write(str(dvp.round(2))[1:-1])
+                            outfile.write(str(format(float(dvp), ".2f")))
                             outfile.write("\n")
 
 
