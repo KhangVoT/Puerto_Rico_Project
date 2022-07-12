@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 4/5/2022
+# Date Last Modified: 6/11/2022
 # Python Version: 3.9
 
 import os
@@ -11,9 +11,10 @@ import time
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import interpn
 
 
-# function to create plot friendly file:
+# function to create plot friendly files:
 def plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, file_name):
     with open(teletomoDD_file_path + "/" + file_name + "_plot_friendly.txt", "w") as outfile:
         outfile.write("Lat")
@@ -186,6 +187,71 @@ def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, l
     plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_perturb")
 
 
+# function to create 3D velocity model for interpolation
+def create_model(mit_file):
+    df = pd.read_csv(mit_file, delim_whitespace=True)
+
+    # extract the list of coordinates
+    xs = np.array(df["Lat"].to_list())
+    ys = np.array(df["Long"].to_list())
+    zs = np.array(df["Depth"].to_list())
+    # extract the associated velocity values
+    vs = np.array(df["dVp"].to_list())
+
+    px, ix = np.unique(xs, return_inverse=True)
+    py, iy = np.unique(ys, return_inverse=True)
+    pz, iz = np.unique(zs, return_inverse=True)
+
+    points = (px, py, pz)
+
+    values = np.empty_like(vs, shape=(px.size, py.size, pz.size))
+    values[ix, iy, iz] = vs
+
+    return points, values
+
+
+# function to interpolate velocities
+def interp(points, values, mit_file):
+
+    # create desired coordinates
+    lat_request = np.arange(-90, 90 + 1, 5)
+    long_request = np.arange(0, 360 + 1, 5)
+    depth_request = np.arange(25, 1825 + 1, 100)
+
+    if ".txt" in mit_file:
+        with open(mit_file, "r") as infile:
+            header = next(infile)
+            with open(mit_file[0:-4] + "_interp.txt", "w") as outfile:
+                outfile.write(header)
+                for depth in depth_request:
+                    for long in long_request:
+                        for lat in lat_request:
+                            outfile.write(str(format(lat, ".2f")))
+                            outfile.write("\t")
+                            outfile.write(str(format(long, ".2f")))
+                            outfile.write("\t")
+                            outfile.write(str(format(depth, ".1f")))
+                            outfile.write("\t")
+
+                            dvp_request = np.array([lat, long, depth])
+                            dvp = interpn(points, values, dvp_request, method="linear", bounds_error=False,
+                                          fill_value=None)
+                            outfile.write(str(format(float(dvp), ".2f")))
+                            outfile.write("\n")
+
+    interp_file = mit_file[0:-4] + "_interp.txt"
+    return interp_file
+
+
+def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max):
+
+    points, values = create_model(mit_file)
+    interp_file = interp(points, values, mit_file)
+
+    glb(ak135_file, interp_file, output_path)
+    reg(ak135_file, interp_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
+
+
 # run main()
 if __name__ == "__main__":
 
@@ -199,7 +265,6 @@ if __name__ == "__main__":
     lon_max = -55
     lat_min = 5
     lat_max = 25
-    depth_max = 800
+    depth_max = 1000
 
-    glb(ak135_file, mit_file, output_path)
-    reg(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
+    main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)

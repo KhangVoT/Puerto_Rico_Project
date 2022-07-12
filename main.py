@@ -59,19 +59,16 @@ def main():
     # run phase_filter module
     phase_filter.main(study_area_path, phase_filter_path)
 
-    # run create_stations_file
+    # run create_stations_file module
     create_stations_file.main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max)
 
-    # run create_event_files all1a
+    # run create_event_files event module
     create_event_files.event(study_area_path + "/hdf", teletomoDD_file_path)
 
-    # run create_event_files all1
+    # run create_event_files abs module
     create_event_files.abs(phase_filter_path, teletomoDD_file_path)
 
-    # run create_velocity_files.glb
-    create_velocity_files.glb(ak135_file, mit_file, teletomoDD_file_path)
-
-    # run create_velocity_files.reg
+    # run create_velocity_files module
     create_velocity_files.reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_max)
 
     # # run plot_statistics module
