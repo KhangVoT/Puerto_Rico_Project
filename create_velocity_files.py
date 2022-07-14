@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 6/11/2022
+# Date Last Modified: 6/13/2022
 # Python Version: 3.9
 
 import os
@@ -207,16 +207,16 @@ def create_model(mit_file):
     values = np.empty_like(vs, shape=(px.size, py.size, pz.size))
     values[ix, iy, iz] = vs
 
-    return points, values
+    return points, values, df["Lat"], df["Long"], df["Depth"]
 
 
 # function to interpolate velocities
-def interp(points, values, mit_file):
+def interp(mit_file, points, values, lat, long, depth, lat_step, long_step, depth_step):
 
-    # create desired coordinates
-    lat_request = np.arange(-90, 90 + 1, 5)
-    long_request = np.arange(0, 360 + 1, 5)
-    depth_request = np.arange(25, 1825 + 1, 100)
+    # set desired coordinates
+    lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
+    long_request = np.arange(np.floor(min(long)), np.ceil(max(long)) + long_step, long_step)
+    depth_request = np.arange(np.floor(min(depth)), np.ceil(max(depth)) + depth_step, depth_step)
 
     if ".txt" in mit_file:
         with open(mit_file, "r") as infile:
@@ -243,10 +243,10 @@ def interp(points, values, mit_file):
     return interp_file
 
 
-def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max):
+def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max, lat_step, long_step, depth_step):
 
-    points, values = create_model(mit_file)
-    interp_file = interp(points, values, mit_file)
+    points, values, lat, long, depth = create_model(mit_file)
+    interp_file = interp(mit_file, points, values, lat, long, depth, lat_step, long_step, depth_step)
 
     glb(ak135_file, interp_file, output_path)
     reg(ak135_file, interp_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
@@ -267,4 +267,9 @@ if __name__ == "__main__":
     lat_max = 25
     depth_max = 1000
 
-    main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
+    # user specified steps for coordinate interpolation
+    lat_step = 5
+    long_step = 5
+    depth_step = 100
+
+    main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max, lat_step, long_step, depth_step)

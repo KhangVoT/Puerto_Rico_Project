@@ -1,7 +1,7 @@
 # Project Name: Puerto Rico Project
 # Author: Khang Vo
 # Date Created: 9/19/2021
-# Date Last Modified: 2/13/2022
+# Date Last Modified: 6/13/2022
 # Python Version: 3.9
 
 import os
@@ -47,6 +47,11 @@ def main():
     lat_max = 25
     depth_max = 1000
 
+    # user specified steps for coordinate interpolation
+    lat_step = 5
+    long_step = 5
+    depth_step = 100
+
     # run reformat_hdf_res module
     reformat_hdf_res.main(raw_path, reformatted_path, year_range)
 
@@ -69,7 +74,7 @@ def main():
     create_event_files.abs(phase_filter_path, teletomoDD_file_path)
 
     # run create_velocity_files module
-    create_velocity_files.reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_max)
+    create_velocity_files.main(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_max, lat_step, long_step, depth_step)
 
     # # run plot_statistics module
     # plot_statistics.main(study_area_path, year_range)
