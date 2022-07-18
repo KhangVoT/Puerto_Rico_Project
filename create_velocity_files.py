@@ -212,7 +212,7 @@ def interp(mit_file, points, values, lat, long, depth, lat_step, long_step, dept
     # set desired coordinates
     lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
     long_request = np.arange(np.floor(min(long)), np.ceil(max(long)) + long_step, long_step)
-    depth_request = np.arange(np.floor(min(depth)), np.ceil(max(depth)), depth_step)
+    depth_request = np.arange(0, np.ceil(max(depth)), depth_step)
     depth_request = np.insert(depth_request, len(depth_request), 6371.0)
 
     if ".txt" in mit_file:
