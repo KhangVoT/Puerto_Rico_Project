@@ -1,7 +1,7 @@
 # Project Name: Puerto Rico Project
 # Author: Khang Vo
 # Date Created: 9/19/2021
-# Date Last Modified: 6/13/2022
+# Date Last Modified: 6/17/2022
 # Python Version: 3.9
 
 import os
@@ -50,7 +50,7 @@ def main():
     # user specified steps for coordinate interpolation
     lat_step = 5
     long_step = 5
-    depth_step = 100
+    depth_step = 200
 
     # run reformat_hdf_res module
     reformat_hdf_res.main(raw_path, reformatted_path, year_range)
