@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 6/13/2022
+# Date Last Modified: 6/17/2022
 # Python Version: 3.9
 
 import os
@@ -127,11 +127,7 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
     depth_unq = df_glb["Depth"].unique()
     dvp = df_glb["dVp"]
 
-    lat_unq[0] = -90
-    lat_unq[-1] = 90
-    long_unq[0] = -180
-    long_unq[-1] = 180
-    depth_unq = np.insert(depth_unq, 0, -1)
+    depth_unq = np.insert(depth_unq, 0, -100)
 
     ak135 = pd.read_csv(ak135_file, delim_whitespace=True, header=None, skiprows=1)
 
@@ -216,7 +212,8 @@ def interp(mit_file, points, values, lat, long, depth, lat_step, long_step, dept
     # set desired coordinates
     lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
     long_request = np.arange(np.floor(min(long)), np.ceil(max(long)) + long_step, long_step)
-    depth_request = np.arange(np.floor(min(depth)), np.ceil(max(depth)) + depth_step, depth_step)
+    depth_request = np.arange(np.floor(min(depth)), np.ceil(max(depth)), depth_step)
+    depth_request = np.insert(depth_request, len(depth_request), 6371.0)
 
     if ".txt" in mit_file:
         with open(mit_file, "r") as infile:
@@ -270,6 +267,6 @@ if __name__ == "__main__":
     # user specified steps for coordinate interpolation
     lat_step = 5
     long_step = 5
-    depth_step = 100
+    depth_step = 200
 
     main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max, lat_step, long_step, depth_step)
