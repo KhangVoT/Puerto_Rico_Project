@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 6/17/2022
+# Date Last Modified: 7/27/2022
 # Python Version: 3.9
 
 import os
@@ -15,61 +15,27 @@ from scipy.interpolate import interpn
 
 
 # function to create plot friendly files:
-def plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, file_name):
-    with open(teletomoDD_file_path + "/" + file_name + "_plot_friendly.txt", "w") as outfile:
-        outfile.write("Lat")
-        outfile.write("\t")
-        outfile.write("Long")
-        outfile.write("\t")
-        outfile.write("Depth")
-        outfile.write("\t")
-        outfile.write("dVp")
-        outfile.write("\n")
+def plot_friendly(df, teletomoDD_file_path, file_name):
 
-        if "_abs" in file_name:
-            m = 0
-            for i in depth_unq:
-                for j in long_unq:
-                    for k in lat_unq:
-                        outfile.write(str(format(k, ".2f")))
-                        outfile.write("\t")
-                        outfile.write(str(format(j, ".2f")))
-                        outfile.write("\t")
-                        outfile.write(str(format(i, ".1f")))
-                        outfile.write("\t")
-                        outfile.write(str(format(vel_new[m], ".2f")))
-                        outfile.write("\n")
-                m += 1
-        elif "_perturb" in file_name:
-            m = 0
-            n = 0
-            for i in depth_unq:
-                for j in long_unq:
-                    for k in lat_unq:
-                        if i < 0:
-                            outfile.write(str(format(k, ".2f")))
-                            outfile.write("\t")
-                            outfile.write(str(format(j, ".2f")))
-                            outfile.write("\t")
-                            outfile.write(str(format(i, ".1f")))
-                            outfile.write("\t")
-                            outfile.write(str(format(vel_new[n], ".2f")))
-                            outfile.write("\n")
-                        else:
-                            outfile.write(str(format(k, ".2f")))
-                            outfile.write("\t")
-                            outfile.write(str(format(j, ".2f")))
-                            outfile.write("\t")
-                            outfile.write(str(format(i, ".1f")))
-                            outfile.write("\t")
-                            outfile.write(str(format((vel_new[n] * (1 + dvp.iloc[m] / 100)), ".2f")))
-                            outfile.write("\n")
-                            m += 1
-                n += 1
+    df = df.sort_values(by=["Depth", "Long", "Lat"]).reset_index(drop=True)
+
+    df = df.applymap(lambda x: format(x, ".2f"))
+
+    if "_abs" in file_name:
+        headers = ["Lat", "Long", "Depth", "Vel"]
+        df.to_csv(teletomoDD_file_path + "/" + file_name + "_plot_friendly.txt", columns=headers, sep="\t", index=False)
+    elif "_perturb" in file_name:
+        headers = ["Lat", "Long", "Depth", "Vel_Perturb"]
+        df.to_csv(teletomoDD_file_path + "/" + file_name + "_plot_friendly.txt", columns=headers, sep="\t", index=False)
 
 
 # function to write DataFrame to text file
-def output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, file_name):
+def output_df(df, teletomoDD_file_path, file_name):
+
+    lat_unq = df["Lat"].unique()
+    long_unq = df["Long"].unique()
+    depth_unq = df["Depth"].unique()
+
     with open(teletomoDD_file_path + "/" + file_name + ".txt", "w") as outfile:
         outfile.write("0.1")
         outfile.write(" ")
@@ -80,15 +46,15 @@ def output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, 
         outfile.write(str(len(depth_unq)))
         outfile.write("\n")
         for i in long_unq:
-            outfile.write(str(i))
+            outfile.write(str(format(i, ".2f")))
             outfile.write(" ")
         outfile.write("\n")
         for j in lat_unq:
-            outfile.write(str(j))
+            outfile.write(str(format(j, ".2f")))
             outfile.write(" ")
         outfile.write("\n")
         for k in depth_unq:
-            outfile.write(str(k))
+            outfile.write(str(format(k, ".1f")))
             outfile.write(" ")
         outfile.write("\n")
 
@@ -97,90 +63,89 @@ def output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, 
             for _ in depth_unq:
                 for _ in lat_unq:
                     for _ in long_unq:
-                        outfile.write(str(format(vel_new[m], ".2f")))
+                        outfile.write(str(format(df.loc[m, "Vel"], ".2f")))
                         outfile.write(" ")
+                        m += 1
                     outfile.write("\n")
-                m += 1
         elif "_perturb" in file_name:
-            m = 0
             n = 0
-            for i in depth_unq:
+            for _ in depth_unq:
                 for _ in lat_unq:
                     for _ in long_unq:
-                        if i < 0:
-                            outfile.write(str(format(vel_new[n], ".2f")))
-                            outfile.write(" ")
-                        else:
-                            outfile.write(str(format((vel_new[n] * (1 + dvp.iloc[m] / 100)), ".2f")))
-                            outfile.write(" ")
-                            m += 1
+                        outfile.write(str(format(df.loc[n, "Vel_Perturb"], ".2f")))
+                        outfile.write(" ")
+                        n += 1
                     outfile.write("\n")
-                n += 1
 
 
 # function to calculate global velocity model
 def glb(ak135_file, mit_file, teletomoDD_file_path):
     df_glb = pd.read_csv(mit_file, delim_whitespace=True)
+    df_glb["Long"] = (df_glb["Long"] - 180).round(2)
 
-    lat_unq = df_glb["Lat"].unique()
-    long_unq = (df_glb["Long"].unique() - 180).round(2)
-    depth_unq = df_glb["Depth"].unique()
-    dvp = df_glb["dVp"]
+    df_glb = df_glb.sort_values(by=["Depth", "Lat", "Long"]).reset_index(drop=True)
 
-    depth_unq = np.insert(depth_unq, 0, -100)
+    df_upper = df_glb[(df_glb["Depth"] == min(df_glb["Depth"]))].copy()
+    df_upper.loc[:, "Depth"] = -100
+    df_upper.loc[:, "dVp"] = 0
+
+    df_glb = pd.concat([df_upper, df_glb]).reset_index(drop=True)
 
     ak135 = pd.read_csv(ak135_file, delim_whitespace=True, header=None, skiprows=1)
 
     depth = ak135.iloc[:, 0]
     velP = ak135.iloc[:, 1]
-    vel_new = np.interp(depth_unq, depth, velP)
-    vel_new = vel_new.round(4)
+    df_glb["Vel"] = np.interp(df_glb["Depth"], depth, velP)
+    df_glb["Vel_Perturb"] = df_glb["Vel"] * (1 + df_glb["dVp"] / 100)
 
     # create global absolute velocity file
-    output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_abs")
+    output_df(df_glb, teletomoDD_file_path, "glb_abs")
 
     # create global perturbation velocity file
-    output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_perturb")
+    output_df(df_glb, teletomoDD_file_path, "glb_perturb")
 
     # create plot friendly global absolute velocity file
-    plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_abs")
+    plot_friendly(df_glb, teletomoDD_file_path, "glb_abs")
 
     # create plot friendly global perturbation velocity file
-    plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "glb_perturb")
+    plot_friendly(df_glb, teletomoDD_file_path, "glb_perturb")
 
 
 # function to calculate regional velocity model
 def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_max):
     df_reg = pd.read_csv(mit_file, delim_whitespace=True)
+    df_reg["Long"] = (df_reg["Long"] - 180).round(2)
+
     df_reg = df_reg[(df_reg["Lat"] >= lat_min) & (df_reg["Lat"] <= lat_max)]
-    df_reg = df_reg[(df_reg["Long"] - 180 >= lon_min) & (df_reg["Long"] - 180 <= lon_max)]
+    df_reg = df_reg[(df_reg["Long"] >= lon_min) & (df_reg["Long"] <= lon_max)]
     df_reg = df_reg[(df_reg["Depth"] <= depth_max)]
 
-    lat_unq = df_reg["Lat"].unique()
-    long_unq = (df_reg["Long"].unique() - 180).round(2)
-    depth_unq = df_reg["Depth"].unique()
-    dvp = df_reg["dVp"]
+    df_reg = df_reg.sort_values(by=["Depth", "Lat", "Long"]).reset_index(drop=True)
 
-    depth_unq = np.insert(depth_unq, 0, -1)
+    df_upper = df_reg[(df_reg["Depth"] == min(df_reg["Depth"]))].copy()
+    df_upper.loc[:, "Depth"] = -1
+    df_upper.loc[:, "dVp"] = 0
+
+    df_reg = pd.concat([df_upper, df_reg]).reset_index(drop=True)
 
     ak135 = pd.read_csv(ak135_file, delim_whitespace=True, header=None, skiprows=1)
 
     depth = ak135.iloc[:, 0]
     velP = ak135.iloc[:, 1]
-    vel_new = np.interp(depth_unq, depth, velP)
-    vel_new = vel_new.round(4)
+    df_reg["Vel"] = np.interp(df_reg["Depth"], depth, velP)
+    df_reg["Vel_Perturb"] = df_reg["Vel"] * (1 + df_reg["dVp"] / 100)
 
     # create regional absolute velocity file
-    output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_abs")
+    output_df(df_reg, teletomoDD_file_path, "reg_abs")
 
     # create regional perturbation velocity file
-    output_df(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_perturb")
+    output_df(df_reg, teletomoDD_file_path, "reg_perturb")
 
     # create plot friendly regional absolute velocity file
-    plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_abs")
+    plot_friendly(df_reg, teletomoDD_file_path, "reg_abs")
 
     # create plot friendly regional perturbation velocity file
-    plot_friendly(long_unq, lat_unq, depth_unq, dvp, vel_new, teletomoDD_file_path, "reg_perturb")
+    plot_friendly(df_reg, teletomoDD_file_path, "reg_perturb")
 
 
 # function to create 3D velocity model for interpolation
@@ -212,7 +177,7 @@ def interp(mit_file, points, values, lat, long, depth, lat_step, long_step, dept
     # set desired coordinates
     lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
     long_request = np.arange(np.floor(min(long)), np.ceil(max(long)) + long_step, long_step)
-    depth_request = np.arange(0, np.ceil(max(depth)), depth_step)
+    depth_request = np.arange(min(depth), max(depth), depth_step)
     depth_request = np.insert(depth_request, len(depth_request), 6371.0)
 
     if ".txt" in mit_file:
@@ -240,13 +205,13 @@ def interp(mit_file, points, values, lat, long, depth, lat_step, long_step, dept
     return interp_file
 
 
-def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max, lat_step, long_step, depth_step):
+def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max):
 
     points, values, lat, long, depth = create_model(mit_file)
     interp_file = interp(mit_file, points, values, lat, long, depth, lat_step, long_step, depth_step)
 
     glb(ak135_file, interp_file, output_path)
-    reg(ak135_file, interp_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
+    reg(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
 
 
 # run main()
@@ -262,11 +227,11 @@ if __name__ == "__main__":
     lon_max = -55
     lat_min = 5
     lat_max = 25
-    depth_max = 1000
+    depth_max = 800
 
     # user specified steps for coordinate interpolation
     lat_step = 5
     long_step = 5
     depth_step = 200
 
-    main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max, lat_step, long_step, depth_step)
+    main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
