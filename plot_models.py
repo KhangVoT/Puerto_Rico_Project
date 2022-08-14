@@ -80,7 +80,7 @@ def main(mod_file, vp_file, depth_list):
                          np.arange(df_merged["Lat"].min(), df_merged["Lat"].max(), 0.1))
 
     # create main plot
-    fig, axes = plt.subplots(nrows=len(depth_list), ncols=2, figsize=(10, 6))
+    fig, axes = plt.subplots(nrows=len(depth_list), ncols=2, figsize=(10, 9))
     axes = axes.flatten()
 
     # loop through each depth to add to subplots
@@ -89,7 +89,8 @@ def main(mod_file, vp_file, depth_list):
         n *= 2
         plot_models(n, axes, df_merged, depth, xi, yi)
 
-    fig.suptitle("Velocity Models", fontsize=18, y=0.95)
+    fig.suptitle("Velocity Models N1", fontsize=18, y=0.95)
+    # plt.tight_layout()
     plt.show()
 
 
@@ -97,8 +98,8 @@ def main(mod_file, vp_file, depth_list):
 if __name__ == "__main__":
 
     # user specified working directory
-    mod_file = "/Users/khangvo/Downloads/MOD.xyzv"
-    vp_file = "/Users/khangvo/Downloads/Vp_model.xyzv"
+    mod_file = "/Users/khangvo/Downloads/MOD_N1.xyzv"
+    vp_file = "/Users/khangvo/Downloads/Vp_model_N1.xyzv"
 
     depth_list = [22.6, 338.8, 745.5]
 
