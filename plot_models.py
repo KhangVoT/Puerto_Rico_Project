@@ -1,7 +1,7 @@
 # File Name: plot_models
 # Author: Khang Vo
 # Date Created: 8/10/2022
-# Date Last Modified: 8/13/2022
+# Date Last Modified: 8/15/2022
 # Python Version: 3.9
 
 import os
@@ -16,9 +16,13 @@ from scipy.interpolate import Rbf
 from mpl_toolkits.basemap import Basemap
 
 
-def plot_models(n, axes, df_merged, depth, xi, yi):
+def plot_models(n, axes, df_merged, depth):
     # cut df_vp to desired depth
     df = df_merged[df_merged["Depth"] == depth]
+
+    # build a regular grid with n cells
+    xi, yi = np.meshgrid(np.arange(df["Long"].min(), df["Long"].max(), 0.1),
+                         np.arange(df["Lat"].min(), df["Lat"].max(), 0.1))
 
     # do radial basic function interpolation for Vp_init
     rbfi_init = Rbf(df["Long"], df["Lat"], df["Vp_init"], function="multiquadric", smooth=0.1)
@@ -75,10 +79,6 @@ def main(mod_file, vp_file, depth_list):
     df_merged = pd.merge(df_mod_orig, df_vp_orig, how="left", left_on=["Long", "Lat", "Depth"], right_on=["Long", "Lat", "Depth"])
     df_merged = df_merged.dropna().astype(float)
 
-    # build a regular grid with n cells
-    xi, yi = np.meshgrid(np.arange(df_merged["Long"].min(), df_merged["Long"].max(), 0.1),
-                         np.arange(df_merged["Lat"].min(), df_merged["Lat"].max(), 0.1))
-
     # create main plot
     fig, axes = plt.subplots(nrows=len(depth_list), ncols=2, figsize=(10, 9))
     axes = axes.flatten()
@@ -87,9 +87,9 @@ def main(mod_file, vp_file, depth_list):
     for n, depth in enumerate(depth_list):
         # skip 1 subplot due to plotting in pairs
         n *= 2
-        plot_models(n, axes, df_merged, depth, xi, yi)
+        plot_models(n, axes, df_merged, depth)
 
-    fig.suptitle("Velocity Models N1", fontsize=18, y=0.95)
+    fig.suptitle("tomoDD.vel.001.005", fontsize=18, y=0.95)
     # plt.tight_layout()
     plt.show()
 
@@ -98,8 +98,8 @@ def main(mod_file, vp_file, depth_list):
 if __name__ == "__main__":
 
     # user specified working directory
-    mod_file = "/Users/khangvo/Downloads/MOD_N1.xyzv"
-    vp_file = "/Users/khangvo/Downloads/Vp_model_N1.xyzv"
+    mod_file = "/Users/khangvo/Downloads/MOD.xyzv"
+    vp_file = "/Users/khangvo/Downloads/tomoDD.vel.001.005"
 
     depth_list = [22.6, 338.8, 745.5]
 
