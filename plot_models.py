@@ -1,7 +1,7 @@
 # File Name: plot_models
 # Author: Khang Vo
 # Date Created: 8/10/2022
-# Date Last Modified: 8/15/2022
+# Date Last Modified: 8/17/2022
 # Python Version: 3.9
 
 import os
@@ -65,42 +65,48 @@ def plot_models(n, axes, df_merged, depth):
     cbar.set_label("Vp (km/s)")
 
 
-def main(mod_file, vp_file, depth_list):
-    # read mod_file
-    df_mod_orig = pd.read_csv(mod_file, delim_whitespace=True, dtype=object)
-    df_mod_orig.columns = ["Long", "Lat", "Depth", "Num1", "Vp_init"]
-    df_mod_orig = df_mod_orig.drop(["Num1"], axis=1)
+def main(file_list, depth_list):
+    for i in range(len(file_list) - 1):
+        mod_file = file_list[i]
+        vp_file = file_list[i + 1]
+        i = i + 1
 
-    # read vp_file
-    df_vp_orig = pd.read_csv(vp_file, delim_whitespace=True, dtype=object)
-    df_vp_orig.columns = ["Long", "Lat", "Depth", "Num1", "Vp_final", "Num2"]
-    df_vp_orig = df_vp_orig.drop(["Num1", "Num2"], axis=1)
+        # read mod_file
+        df_mod_orig = pd.read_csv(mod_file, delim_whitespace=True, dtype=object, usecols=range(5))
+        df_mod_orig.columns = ["Long", "Lat", "Depth", "Num1", "Vp_init"]
+        df_mod_orig = df_mod_orig.drop(["Num1"], axis=1)
 
-    df_merged = pd.merge(df_mod_orig, df_vp_orig, how="left", left_on=["Long", "Lat", "Depth"], right_on=["Long", "Lat", "Depth"])
-    df_merged = df_merged.dropna().astype(float)
+        # read vp_file
+        df_vp_orig = pd.read_csv(vp_file, delim_whitespace=True, dtype=object, usecols=range(5))
+        df_vp_orig.columns = ["Long", "Lat", "Depth", "Num1", "Vp_final"]
+        df_vp_orig = df_vp_orig.drop(["Num1"], axis=1)
 
-    # create main plot
-    fig, axes = plt.subplots(nrows=len(depth_list), ncols=2, figsize=(10, 9))
-    axes = axes.flatten()
+        df_merged = pd.merge(df_mod_orig, df_vp_orig, how="left", left_on=["Long", "Lat", "Depth"], right_on=["Long", "Lat", "Depth"])
+        df_merged = df_merged.dropna().astype(float)
 
-    # loop through each depth to add to subplots
-    for n, depth in enumerate(depth_list):
-        # skip 1 subplot due to plotting in pairs
-        n *= 2
-        plot_models(n, axes, df_merged, depth)
+        # create main plot
+        fig, axes = plt.subplots(nrows=len(depth_list), ncols=2, figsize=(10, 9))
+        axes = axes.flatten()
 
-    fig.suptitle("tomoDD.vel.001.005", fontsize=18, y=0.95)
-    # plt.tight_layout()
-    plt.show()
+        # loop through each depth to add to subplots
+        for n, depth in enumerate(depth_list):
+            # skip 1 subplot due to plotting in pairs
+            n *= 2
+            plot_models(n, axes, df_merged, depth)
+
+        fig.suptitle("tomoDD.vel.001.00" + str(i), fontsize=18, y=0.95)
+        plt.show()
+
+        # plt.savefig("/Users/khangvo/Downloads/tomoDD_vel_001_00" + str(i) + "_abs.jpeg")
 
 
 # run main()
 if __name__ == "__main__":
 
-    # user specified working directory
-    mod_file = "/Users/khangvo/Downloads/MOD.xyzv"
-    vp_file = "/Users/khangvo/Downloads/tomoDD.vel.001.005"
+    root = "/Users/khangvo/Downloads/"
+
+    file_list = sorted(glob.glob(root + "*MOD*") + glob.glob(root + "*vel*"))
 
     depth_list = [22.6, 338.8, 745.5]
 
-    main(mod_file, vp_file, depth_list)
+    main(file_list, depth_list)
