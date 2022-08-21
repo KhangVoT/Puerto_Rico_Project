@@ -1,7 +1,7 @@
 # File Name: plot_models
 # Author: Khang Vo
 # Date Created: 8/10/2022
-# Date Last Modified: 8/18/2022
+# Date Last Modified: 8/19/2022
 # Python Version: 3.9
 
 import os
@@ -16,100 +16,73 @@ from scipy.interpolate import Rbf
 from mpl_toolkits.basemap import Basemap
 
 
-def plot_models(n, axes, df_control, df_merged, depth):
+def plot_models(max_i, i, j, axes, df_control, df, depth):
     # cut df_vp to desired depth
-    df = df_merged[df_merged["Depth"] == depth]
-
-    # cut df_control to desired depth
-    df_control = df_control[df_control["Depth"] == depth]
+    df = df[df["Depth"] == str(depth)].astype(float)
 
     # build a regular grid with n cells
     xi, yi = np.meshgrid(np.arange(df["Long"].min(), df["Long"].max(), 0.1),
                          np.arange(df["Lat"].min(), df["Lat"].max(), 0.1))
 
-    # do radial basic function interpolation for Vp_init
-    rbfi_init = Rbf(df["Long"], df["Lat"], df["Vp_init"], function="multiquadric", smooth=0.1)
-    vi_init = rbfi_init(xi, yi)
+    # do radial basic function interpolation for Vp
+    rbfi = Rbf(df["Long"], df["Lat"], df["Vp"], function="multiquadric", smooth=0.1)
+    vi = rbfi(xi, yi)
 
-    # do radial basic function interpolation for Vp_final
-    rbfi_final = Rbf(df["Long"], df["Lat"], df["Vp_final"], function="multiquadric", smooth=0.1)
-    vi_final = rbfi_final(xi, yi)
+    # cut df_control to desired depth
+    df_control = df_control[df_control["Depth"] == str(depth)].astype(float)
 
     # create subplots
 
     # plot initial model
     m = Basemap(resolution="h", llcrnrlat=df["Lat"].min(), llcrnrlon=df["Long"].min(),
-                urcrnrlat=df["Lat"].max(), urcrnrlon=df["Long"].max(), ax=axes[n], suppress_ticks=False)
+                urcrnrlat=df["Lat"].max(), urcrnrlon=df["Long"].max(), ax=axes[j, i], suppress_ticks=False)
     m.drawcoastlines()
-    m.drawparallels(np.arange(-90, 90, 5), labels=[1, 0, 0, 0], linewidth=0, xoffset=0.5, yoffset=0.5)
-    m.drawmeridians(np.arange(0, 360, 5), labels=[0, 0, 0, 1], linewidth=0, xoffset=0.5, yoffset=0.5)
-    cl = axes[n].imshow(vi_init, origin="lower", cmap="jet", vmin=min(df_control["Vp"]), vmax=max(df_control["Vp"]),
-                        extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
-    axes[n].set_title("Initial Model: " + "Depth = " + str(depth) + " (km)")
-    axes[n].xaxis.set_major_locator(ticker.MultipleLocator(5))
-    axes[n].yaxis.set_major_locator(ticker.MultipleLocator(5))
-    axes[n].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
-    cbar = plt.colorbar(cl, ax=axes[n])
-    cbar.set_label("Vp (km/s)")
+    m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0, xoffset=0.5, yoffset=0.5)
+    m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0, xoffset=0.5, yoffset=0.5)
+    cl = axes[j, i].imshow(vi, origin="lower", cmap="jet", vmin=min(df_control["Vp"]), vmax=max(df_control["Vp"]),
+                           extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
-    # plot final model
-    m = Basemap(resolution="h", llcrnrlat=df["Lat"].min(), llcrnrlon=df["Long"].min(),
-                urcrnrlat=df["Lat"].max(), urcrnrlon=df["Long"].max(), ax=axes[n + 1], suppress_ticks=False)
-    m.drawcoastlines()
-    m.drawparallels(np.arange(-90, 90, 5), labels=[1, 0, 0, 0], linewidth=0, xoffset=0.5, yoffset=0.5)
-    m.drawmeridians(np.arange(0, 360, 5), labels=[0, 0, 0, 1], linewidth=0, xoffset=0.5, yoffset=0.5)
-    cl = axes[n + 1].imshow(vi_final, origin="lower", cmap="jet", vmin=min(df_control["Vp"]), vmax=max(df_control["Vp"]),
-                            extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
-    axes[n + 1].set_title("Final Model: " + "Depth = " + str(depth) + " (km)")
-    axes[n + 1].xaxis.set_major_locator(ticker.MultipleLocator(5))
-    axes[n + 1].yaxis.set_major_locator(ticker.MultipleLocator(5))
-    axes[n + 1].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
-    cbar = plt.colorbar(cl, ax=axes[n + 1])
-    cbar.set_label("Vp (km/s)")
+    if i == 0:
+        axes[j, i].set_title("(Initial) " + " Depth = " + str(depth) + " km")
+    elif i > 0:
+        axes[j, i].set_title("(N" + str(i) + ") Depth = " + str(depth) + " km")
+
+    axes[j, i].xaxis.set_major_locator(ticker.MultipleLocator(10))
+    axes[j, i].yaxis.set_major_locator(ticker.MultipleLocator(10))
+    axes[j, i].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
+
+    if i == max_i:
+        cbar = plt.colorbar(cl, ax=axes[j, i], shrink=0.685)
+        cbar.set_label("Vp (km/s)")
 
 
 def main(file_list, depth_list):
-    for i in range(len(file_list) - 1):
-        mod_file = file_list[i]
-        vp_file = file_list[i + 1]
-        i = i + 1
+    # create main plot
+    fig, axes = plt.subplots(nrows=len(depth_list), ncols=len(file_list), figsize=(19, 9), constrained_layout=True)
+    fig.suptitle("Velocity Models (Perturbations)", fontsize=18, y=0.995)
 
-        # read mod_file
-        df_mod_orig = pd.read_csv(mod_file, delim_whitespace=True, dtype=object, usecols=range(5))
-        df_mod_orig.columns = ["Long", "Lat", "Depth", "Num1", "Vp_init"]
-        df_mod_orig = df_mod_orig.drop(["Num1"], axis=1)
+    # create control file to set global color bar
+    df_control_list = []
+    for file in file_list:
+        df_control = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
+        df_control.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
+        df_control = df_control.drop(["Num1"], axis=1)
+        df_control_list.append(df_control)
+    df_control = pd.concat(df_control_list, ignore_index=True)
 
-        # read vp_file
-        df_vp_orig = pd.read_csv(vp_file, delim_whitespace=True, dtype=object, usecols=range(5))
-        df_vp_orig.columns = ["Long", "Lat", "Depth", "Num1", "Vp_final"]
-        df_vp_orig = df_vp_orig.drop(["Num1"], axis=1)
-
-        df_merged = pd.merge(df_mod_orig, df_vp_orig, how="left", left_on=["Long", "Lat", "Depth"], right_on=["Long", "Lat", "Depth"])
-        df_merged = df_merged.dropna().astype(float)
-
-        # create control file to set global color bar
-        df_control_list = []
-        for file in file_list[1:]:
-            df_control = pd.read_csv(file, delim_whitespace=True, usecols=range(5))
-            df_control.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
-            df_control = df_control.drop(["Num1"], axis=1)
-            df_control_list.append(df_control)
-        df_control = pd.concat(df_control_list, ignore_index=True)
-
-        # create main plot
-        fig, axes = plt.subplots(nrows=len(depth_list), ncols=2, figsize=(10, 9))
-        axes = axes.flatten()
+    # read individual files in file list
+    for i, file in enumerate(file_list):
+        df = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
+        df.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
+        df = df.drop(["Num1"], axis=1)
 
         # loop through each depth to add to subplots
-        for n, depth in enumerate(depth_list):
-            # skip 1 subplot due to plotting in pairs
-            n *= 2
-            plot_models(n, axes, df_control, df_merged, depth)
+        for j, depth in enumerate(depth_list):
+            plot_models(len(file_list) - 1, i, j, axes, df_control, df, depth)
 
-        fig.suptitle("tomoDD.vel.001.00" + str(i), fontsize=18, y=0.95)
-        # plt.show()
+    # plt.show()
 
-        plt.savefig("/Users/khangvo/Downloads/tomoDD_vel_001_00" + str(i) + "_abs.jpeg")
+    plt.savefig("/Users/khangvo/Downloads/velocity_models_perturb.jpeg")
 
 
 # run main()
@@ -117,7 +90,7 @@ if __name__ == "__main__":
 
     root = "/Users/khangvo/Downloads/"
 
-    file_list = sorted(glob.glob(root + "*MOD*") + glob.glob(root + "*vel*"))
+    file_list = glob.glob(root + "*MOD.*") + sorted(glob.glob(root + "*.vel.*"))
 
     depth_list = [22.6, 338.8, 745.5]
 

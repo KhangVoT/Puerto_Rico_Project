@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 7/27/2022
+# Date Last Modified: 8/20/2022
 # Python Version: 3.9
 
 import os
@@ -32,8 +32,8 @@ def plot_friendly(df, teletomoDD_file_path, file_name):
 # function to write DataFrame to text file
 def output_df(df, teletomoDD_file_path, file_name):
 
-    lat_unq = df["Lat"].unique()
     long_unq = df["Long"].unique()
+    lat_unq = df["Lat"].unique()
     depth_unq = df["Depth"].unique()
 
     with open(teletomoDD_file_path + "/" + file_name + ".txt", "w") as outfile:
@@ -79,8 +79,8 @@ def output_df(df, teletomoDD_file_path, file_name):
 
 
 # function to calculate global velocity model
-def glb(ak135_file, mit_file, teletomoDD_file_path):
-    df_glb = pd.read_csv(mit_file, delim_whitespace=True)
+def glb(ak135_file, interp_file_glb, teletomoDD_file_path):
+    df_glb = pd.read_csv(interp_file_glb, delim_whitespace=True)
     df_glb["Long"] = (df_glb["Long"] - 180).round(2)
 
     df_glb = df_glb.sort_values(by=["Depth", "Lat", "Long"]).reset_index(drop=True)
@@ -112,13 +112,9 @@ def glb(ak135_file, mit_file, teletomoDD_file_path):
 
 
 # function to calculate regional velocity model
-def reg(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_max):
-    df_reg = pd.read_csv(mit_file, delim_whitespace=True)
+def reg(ak135_file, interp_file_reg, teletomoDD_file_path):
+    df_reg = pd.read_csv(interp_file_reg, delim_whitespace=True)
     df_reg["Long"] = (df_reg["Long"] - 180).round(2)
-
-    df_reg = df_reg[(df_reg["Lat"] >= lat_min) & (df_reg["Lat"] <= lat_max)]
-    df_reg = df_reg[(df_reg["Long"] >= lon_min) & (df_reg["Long"] <= lon_max)]
-    df_reg = df_reg[(df_reg["Depth"] <= depth_max)]
 
     df_reg = df_reg.sort_values(by=["Depth", "Lat", "Long"]).reset_index(drop=True)
 
@@ -153,8 +149,8 @@ def create_model(mit_file):
     df = pd.read_csv(mit_file, delim_whitespace=True)
 
     # extract the list of coordinates
-    xs = np.array(df["Lat"].to_list())
-    ys = np.array(df["Long"].to_list())
+    xs = np.array(df["Long"].to_list())
+    ys = np.array(df["Lat"].to_list())
     zs = np.array(df["Depth"].to_list())
     # extract the associated velocity values
     vs = np.array(df["dVp"].to_list())
@@ -168,22 +164,21 @@ def create_model(mit_file):
     values = np.empty_like(vs, shape=(px.size, py.size, pz.size))
     values[ix, iy, iz] = vs
 
-    return points, values, df["Lat"], df["Long"], df["Depth"]
+    return points, values, df["Long"], df["Lat"], df["Depth"]
 
 
 # function to interpolate velocities
-def interp(mit_file, points, values, lat, long, depth, lat_step, long_step, depth_step):
+def interp(mit_file, points, values, long, lat, depth, long_step, lat_step, depth_step, suffix):
 
     # set desired coordinates
-    lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
     long_request = np.arange(np.floor(min(long)), np.ceil(max(long)) + long_step, long_step)
+    lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
     depth_request = np.arange(min(depth), max(depth), depth_step)
-    depth_request = np.insert(depth_request, len(depth_request), 6371.0)
 
     if ".txt" in mit_file:
         with open(mit_file, "r") as infile:
             header = next(infile)
-            with open(mit_file[0:-4] + "_interp.txt", "w") as outfile:
+            with open(mit_file[0:-4] + "_interp_" + suffix + ".txt", "w") as outfile:
                 outfile.write(header)
                 for depth in depth_request:
                     for long in long_request:
@@ -195,23 +190,29 @@ def interp(mit_file, points, values, lat, long, depth, lat_step, long_step, dept
                             outfile.write(str(format(depth, ".1f")))
                             outfile.write("\t")
 
-                            dvp_request = np.array([lat, long, depth])
+                            dvp_request = np.array([long, lat, depth])
                             dvp = interpn(points, values, dvp_request, method="linear", bounds_error=False,
                                           fill_value=None)
                             outfile.write(str(format(float(dvp), ".2f")))
                             outfile.write("\n")
 
-    interp_file = mit_file[0:-4] + "_interp.txt"
+    interp_file = mit_file[0:-4] + "_interp_" + suffix + ".txt"
     return interp_file
 
 
-def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max):
+def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_min, depth_max, long_step_glb, lat_step_glb, depth_step_glb, long_step_reg, lat_step_reg, depth_step_reg):
 
-    points, values, lat, long, depth = create_model(mit_file)
-    interp_file = interp(mit_file, points, values, lat, long, depth, lat_step, long_step, depth_step)
+    points, values, long_glb, lat_glb, depth_glb = create_model(mit_file)
 
-    glb(ak135_file, interp_file, output_path)
-    reg(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
+    lon_reg = [lon_min + 180, lon_max + 180]
+    lat_reg = [lat_min, lat_max]
+    depth_reg = [depth_min, depth_max]
+
+    interp_file_glb = interp(mit_file, points, values, long_glb, lat_glb, depth_glb, long_step_glb, lat_step_glb, depth_step_glb, "abs")
+    glb(ak135_file, interp_file_glb, output_path)
+
+    interp_file_reg = interp(mit_file, points, values, lon_reg, lat_reg, depth_reg, long_step_reg, lat_step_reg, depth_step_reg, "reg")
+    reg(ak135_file, interp_file_reg, output_path)
 
 
 # run main()
@@ -227,11 +228,15 @@ if __name__ == "__main__":
     lon_max = -55
     lat_min = 5
     lat_max = 25
-    depth_max = 800
+    depth_min = 10
+    depth_max = 250
 
     # user specified steps for coordinate interpolation
-    lat_step = 5
-    long_step = 5
-    depth_step = 200
+    long_step_glb = 5
+    lat_step_glb = 5
+    depth_step_glb = 200
+    long_step_reg = 0.5
+    lat_step_reg = 0.5
+    depth_step_reg = 10
 
-    main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_max)
+    main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_min, depth_max, long_step_glb, lat_step_glb, depth_step_glb, long_step_reg, lat_step_reg, depth_step_reg)
