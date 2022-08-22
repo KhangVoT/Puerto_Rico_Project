@@ -173,7 +173,7 @@ def interp(mit_file, points, values, long, lat, depth, long_step, lat_step, dept
     # set desired coordinates
     long_request = np.arange(np.floor(min(long)), np.ceil(max(long)) + long_step, long_step)
     lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
-    depth_request = np.arange(min(depth), max(depth), depth_step)
+    depth_request = np.arange(min(depth), max(depth) + depth_step, depth_step)
 
     if ".txt" in mit_file:
         with open(mit_file, "r") as infile:
@@ -228,8 +228,8 @@ if __name__ == "__main__":
     lon_max = -55
     lat_min = 5
     lat_max = 25
-    depth_min = 10
-    depth_max = 250
+    depth_min = 0
+    depth_max = 800
 
     # user specified steps for coordinate interpolation
     long_step_glb = 5
@@ -237,6 +237,6 @@ if __name__ == "__main__":
     depth_step_glb = 200
     long_step_reg = 0.5
     lat_step_reg = 0.5
-    depth_step_reg = 10
+    depth_step_reg = 25
 
     main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_min, depth_max, long_step_glb, lat_step_glb, depth_step_glb, long_step_reg, lat_step_reg, depth_step_reg)

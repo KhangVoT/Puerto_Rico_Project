@@ -92,6 +92,6 @@ if __name__ == "__main__":
 
     file_list = glob.glob(root + "*MOD.*") + sorted(glob.glob(root + "*.vel.*"))
 
-    depth_list = [22.6, 338.8, 745.5]
+    depth_list = [130.0, 170.0, 210.0]
 
     main(file_list, depth_list)
