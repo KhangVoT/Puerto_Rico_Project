@@ -77,7 +77,7 @@ if __name__ == "__main__":
     output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
 
     # user specified year range of data
-    year_min = 2000
+    year_min = 1964
     year_max = 2018
     year_range = np.arange(year_min, year_max + 1, 1)
 
