@@ -1,7 +1,7 @@
 # File Name: plot_statistics
 # Author: Khang Vo
 # Date Created: 9/24/2021
-# Date Last Modified: 9/30/2021
+# Date Last Modified: 9/21/2022
 # Python Version: 3.9
 
 import os
@@ -51,7 +51,7 @@ def main(study_area_path, year_range):
 if __name__ == "__main__":
 
     # user specified working directory
-    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
+    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area/hdf"
 
     # user specified year range of data
     year_min = 2000
