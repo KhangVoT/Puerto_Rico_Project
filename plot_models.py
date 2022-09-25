@@ -80,7 +80,7 @@ def main(file_list, depth_list):
         for j, depth in enumerate(depth_list):
             plot_models(len(file_list) - 1, i, j, axes, df_control, df, depth)
 
-    # plt.show()
+    plt.show()
 
     plt.savefig("/Users/khangvo/Downloads/velocity_models_abs.jpeg")
 
