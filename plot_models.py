@@ -52,8 +52,8 @@ def plot_models(max_i, i, j, axes, df_control, df, depth):
     axes[j, i].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
 
     if i == max_i:
-        cbar = plt.colorbar(cl, ax=axes[j, i], shrink=0.685)
-        cbar.set_label("Vp (km/s)")
+        cb = plt.colorbar(cl, ax=axes[j, i], shrink=0.685)
+        cb.set_label("Vp (km/s)")
 
 
 def main(file_list, depth_list):

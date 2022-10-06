@@ -1,7 +1,7 @@
 # File Name: plot_distribution_maps
 # Author: Khang Vo
 # Date Created: 9/21/2022
-# Date Last Modified: 10/5/2022
+# Date Last Modified: 10/6/2022
 # Python Version: 3.9
 
 import os
@@ -26,21 +26,24 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     df_reg.columns = ["date", "time", "glat", "glon", "depth", "mb", "n1", "n2", "n3", "ievt", "n4"]
     df_reg = df_reg.drop(["n1", "n2", "n3", "n4"], axis=1)
     df_reg = df_reg.astype(float)
-    df_reg = df_reg[(df_reg["glon"].astype(float) >= lon_min) & (df_reg["glon"].astype(float) <= lon_max) &
-                    (df_reg["glat"].astype(float) >= lat_min) & (df_reg["glat"].astype(float) <= lat_max)]
+    df_reg = df_reg[(df_reg["glon"] >= lon_min) & (df_reg["glon"] <= lon_max) &
+                    (df_reg["glat"] >= lat_min) & (df_reg["glat"] <= lat_max)]
 
     m = Basemap(resolution="h", llcrnrlat=df_reg["glat"].min(), llcrnrlon=df_reg["glon"].min(),
-                urcrnrlat=df_reg["glat"].max(), urcrnrlon=df_reg["glon"].max(), ax=ax[0])
+                urcrnrlat=df_reg["glat"].max(), urcrnrlon=df_reg["glon"].max(), ax=ax[0], suppress_ticks=False)
+    m.shadedrelief(scale=0.5)
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0, xoffset=0.5, yoffset=0.5)
-    m.shadedrelief(scale=0.5)
     m.drawcoastlines(color="lightgray")
     m.drawcountries(color="lightgray")
     m.drawstates(color="lightgray")
+    ax[0].xaxis.set_major_locator(ticker.MultipleLocator(10))
+    ax[0].yaxis.set_major_locator(ticker.MultipleLocator(10))
+    ax[0].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
 
     cl = m.scatter(df_reg["glon"], df_reg["glat"], latlon=True, c=df_reg["depth"], s=df_reg["mb"], cmap="jet", alpha=0.5)
 
-    cb = plt.colorbar(cl, ax=ax[0])
+    cb = plt.colorbar(cl, ax=ax[0], location="bottom")
     cb.set_label("Depth (km)")
 
     ax[0].set_title("Regional Data")
@@ -56,7 +59,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
 
     cl = m.scatter(df_glb["glon"], df_glb["glat"], latlon=True, c=df_glb["depth"], s=df_glb["mb"], cmap="jet", alpha=0.5)
 
-    cb = plt.colorbar(cl, ax=ax[1])
+    cb = plt.colorbar(cl, ax=ax[1], location="bottom")
     cb.set_label("Depth (km)")
 
     ax[1].set_title("Global Data")
