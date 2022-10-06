@@ -1,7 +1,7 @@
 # Project Name: Puerto Rico Project
 # Author: Khang Vo
 # Date Created: 9/19/2021
-# Date Last Modified: 8/20/2022
+# Date Last Modified: 10/5/2022
 # Python Version: 3.9
 
 import os
@@ -19,7 +19,11 @@ import phase_filter
 import create_stations_file
 import create_event_files
 import create_velocity_files
-import plot_statistics
+import plot_velocity_profile
+import plot_distribution_maps
+import plot_histograms
+import plot_single_model
+import plot_models
 
 
 # main function:
@@ -79,9 +83,6 @@ def main():
 
     # run create_velocity_files module
     create_velocity_files.main(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_min, depth_max, long_step_glb, lat_step_glb, depth_step_glb, long_step_reg, lat_step_reg, depth_step_reg)
-
-    # # run plot_statistics module
-    # plot_statistics.main(study_area_path, year_range)
 
 
 # run main()
