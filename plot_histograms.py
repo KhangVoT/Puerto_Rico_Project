@@ -29,6 +29,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     ax[0].set_title("Regional Data")
     ax[0].set_xlabel("Depth (km)")
     ax[0].set_ylabel("Number of Earthquakes")
+    ax[0].grid(True)
 
     # plot global events
     df_glb = pd.read_csv(events_glb, delim_whitespace=True)
@@ -39,6 +40,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     ax[1].set_title("Global Data")
     ax[1].set_xlabel("Depth (km)")
     ax[1].set_ylabel("Number of Earthquakes")
+    ax[1].grid(True)
 
     plt.show()
 

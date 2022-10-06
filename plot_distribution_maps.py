@@ -29,24 +29,35 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     df_reg = df_reg[(df_reg["glon"] >= lon_min) & (df_reg["glon"] <= lon_max) &
                     (df_reg["glat"] >= lat_min) & (df_reg["glat"] <= lat_max)]
 
-    m = Basemap(resolution="h", llcrnrlat=df_reg["glat"].min(), llcrnrlon=df_reg["glon"].min(),
+    m = Basemap(resolution=None, llcrnrlat=df_reg["glat"].min(), llcrnrlon=df_reg["glon"].min(),
                 urcrnrlat=df_reg["glat"].max(), urcrnrlon=df_reg["glon"].max(), ax=ax[0], suppress_ticks=False)
-    m.shadedrelief(scale=0.5)
+    m.shadedrelief(scale=1)
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0, xoffset=0.5, yoffset=0.5)
-    m.drawcoastlines(color="lightgray")
-    m.drawcountries(color="lightgray")
-    m.drawstates(color="lightgray")
+
+    ax[0].set_title("Regional Data")
     ax[0].xaxis.set_major_locator(ticker.MultipleLocator(10))
     ax[0].yaxis.set_major_locator(ticker.MultipleLocator(10))
     ax[0].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
 
-    cl = m.scatter(df_reg["glon"], df_reg["glat"], latlon=True, c=df_reg["depth"], s=df_reg["mb"], cmap="jet", alpha=0.5)
+    cl = m.scatter(df_reg["glon"], df_reg["glat"], latlon=True, c=df_reg["depth"], s=df_reg["mb"], cmap="turbo", vmin=min(df_reg["depth"]), vmax=max(df_reg["depth"]), alpha=1)
 
     cb = plt.colorbar(cl, ax=ax[0], location="bottom")
     cb.set_label("Depth (km)")
 
-    ax[0].set_title("Regional Data")
+    for m in [3, 5, 7]:
+        if m == 3:
+            ax[0].scatter([], [], c="black", s=m, alpha=0.5,
+                          label="<=M" + str(m))
+        elif m == 5:
+            ax[0].scatter([], [], c="black", s=m, alpha=0.5,
+                          label="M" + str(m))
+        elif m == 7:
+            ax[0].scatter([], [], c="black", s=m, alpha=0.5,
+                          label=">=M" + str(m))
+
+    ax[0].legend(scatterpoints=1, frameon=True,
+                 labelspacing=0.5, loc="upper right")
 
     # plot global events
     df_glb = pd.read_csv(events_glb, delim_whitespace=True)
@@ -57,12 +68,26 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     m = Basemap(projection="ortho", resolution=None, lat_0=15, lon_0=-67.5, ax=ax[1])
     m.shadedrelief(scale=0.5)
 
-    cl = m.scatter(df_glb["glon"], df_glb["glat"], latlon=True, c=df_glb["depth"], s=df_glb["mb"], cmap="jet", alpha=0.5)
+    ax[1].set_title("Global Data")
+
+    cl = m.scatter(df_glb["glon"], df_glb["glat"], latlon=True, c=df_glb["depth"], s=df_glb["mb"], cmap="turbo", vmin=min(df_glb["depth"]), vmax=max(df_glb["depth"]), alpha=1)
 
     cb = plt.colorbar(cl, ax=ax[1], location="bottom")
     cb.set_label("Depth (km)")
 
-    ax[1].set_title("Global Data")
+    for m in [3, 5, 7]:
+        if m == 3:
+            ax[1].scatter([], [], c="black", s=m, alpha=0.5,
+                          label="<=M" + str(m))
+        elif m == 5:
+            ax[1].scatter([], [], c="black", s=m, alpha=0.5,
+                          label="M" + str(m))
+        elif m == 7:
+            ax[1].scatter([], [], c="black", s=m, alpha=0.5,
+                          label=">=M" + str(m))
+
+    ax[1].legend(scatterpoints=1, frameon=True,
+                 labelspacing=0.5, loc="upper right")
 
     plt.show()
 
