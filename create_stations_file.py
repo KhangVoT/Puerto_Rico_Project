@@ -29,7 +29,7 @@ def main(stations_path, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max
 
     sta = sta.round({"slon": 2, "slat": 2})
 
-    sta.to_csv(teletomoDD_file_path + "/sta.txt", sep="\t", index=False, header=False)
+    sta.to_csv(teletomoDD_file_path + "/sta_glb.txt", sep="\t", index=False, header=False)
 
     sta_zoned = sta[(sta["slon"].astype(float) >= lon_min) & (sta["slon"].astype(float) <= lon_max) &
                     (sta["slat"].astype(float) >= lat_min) & (sta["slat"].astype(float) <= lat_max)]
