@@ -208,7 +208,7 @@ def main(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, 
     lat_reg = [lat_min, lat_max]
     depth_reg = [depth_min, depth_max]
 
-    interp_file_glb = interp(mit_file, points, values, long_glb, lat_glb, depth_glb, long_step_glb, lat_step_glb, depth_step_glb, "abs")
+    interp_file_glb = interp(mit_file, points, values, long_glb, lat_glb, depth_glb, long_step_glb, lat_step_glb, depth_step_glb, "glb")
     glb(ak135_file, interp_file_glb, teletomoDD_file_path)
 
     interp_file_reg = interp(mit_file, points, values, lon_reg, lat_reg, depth_reg, long_step_reg, lat_step_reg, depth_step_reg, "reg")
