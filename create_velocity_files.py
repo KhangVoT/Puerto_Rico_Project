@@ -23,10 +23,10 @@ def plot_friendly(df, teletomoDD_file_path, file_name):
 
     if "_abs" in file_name:
         headers = ["Lat", "Long", "Depth", "Vel"]
-        df.to_csv(teletomoDD_file_path + "/" + file_name + "_plot_friendly.txt", columns=headers, sep="\t", index=False)
+        df.to_csv(teletomoDD_file_path + "/" + file_name + "_vel_plot_friendly.txt", columns=headers, sep="\t", index=False)
     elif "_perturb" in file_name:
         headers = ["Lat", "Long", "Depth", "Vel_Perturb"]
-        df.to_csv(teletomoDD_file_path + "/" + file_name + "_plot_friendly.txt", columns=headers, sep="\t", index=False)
+        df.to_csv(teletomoDD_file_path + "/" + file_name + "_vel_plot_friendly.txt", columns=headers, sep="\t", index=False)
 
 
 # function to write DataFrame to text file
@@ -36,7 +36,7 @@ def output_df(df, teletomoDD_file_path, file_name):
     lat_unq = df["Lat"].unique()
     depth_unq = df["Depth"].unique()
 
-    with open(teletomoDD_file_path + "/" + file_name + ".txt", "w") as outfile:
+    with open(teletomoDD_file_path + "/" + file_name + "_vel.txt", "w") as outfile:
         outfile.write("0.1")
         outfile.write(" ")
         outfile.write(str(len(long_unq)))
