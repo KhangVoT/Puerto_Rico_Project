@@ -1,4 +1,4 @@
-# File Name: plot_models
+# File Name: plot_single_model
 # Author: Khang Vo
 # Date Created: 8/10/2022
 # Date Last Modified: 8/19/2022
