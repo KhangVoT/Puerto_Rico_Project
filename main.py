@@ -19,11 +19,6 @@ import phase_filter
 import create_stations_file
 import create_event_files
 import create_velocity_files
-import plot_velocity_profile
-import plot_distribution_maps
-import plot_histograms
-import plot_single_model
-import plot_models
 
 
 # main function:
