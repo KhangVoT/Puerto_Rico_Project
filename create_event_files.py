@@ -1,7 +1,7 @@
 # File Name: create_event_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 4/17/2022
+# Date Last Modified: 11/13/2022
 # Python Version: 3.9
 
 import os
@@ -20,7 +20,7 @@ def event(hdf_path, output_path):
 
     # iterate through files in file list and read only merged file
     for file in file_list:
-        if "merged" in file:
+        if "merge" in file:
             df_hdf = pd.read_csv(hdf_path + "/" + file, sep="\t", low_memory=False)
 
             c_hdf = df_hdf[["iyr", "mon", "iday", "ihr", "min", "sec", "glat", "glon", "depth", "ievt", "mb"]]
@@ -28,7 +28,7 @@ def event(hdf_path, output_path):
             c_hdf.to_csv(output_path + "/temp_event.txt", sep="\t", index=False)
 
             with open(output_path + "/temp_event.txt", "r") as infile:
-                with open(output_path + "/event.txt", "w") as outfile:
+                with open(output_path + "/" + file[7:14] + "_event.txt", "w") as outfile:
                     # outfile.write("iyr" + "\t")
                     # outfile.write("mon" + "\t")
                     # outfile.write("iday" + "\t")
@@ -68,46 +68,50 @@ def event(hdf_path, output_path):
 
 
 # abs function
-def abs(res_path, output_path):
-    df_res = pd.read_csv(res_path + "/P_filter.txt", sep="\t", low_memory=False)
+def obs(res_path, output_path):
+    file_list = sorted(os.listdir(res_path))
 
-    c_res = df_res[["sta", "ttime", "wgt", "phasej", "ievt"]]
+    # iterate through files in file list and read only merged file
+    for file in file_list:
+        if "merge" in file:
+            df_res = pd.read_csv(res_path + "/" + file, sep="\t", low_memory=False)
 
-    c_res.to_csv(output_path + "/temp_abs.txt", sep="\t", index=False)
+            c_res = df_res[["sta", "ttime", "wgt", "phasej", "ievt"]]
 
-    ievt_seen = set()
+            c_res.to_csv(output_path + "/temp_abs.txt", sep="\t", index=False)
 
-    with open(output_path + "/temp_abs.txt", "r") as infile:
-        with open(output_path + "/abs.txt", "w") as outfile:
-            # outfile.write("sta" + "\t")
-            # outfile.write("ttime" + "\t")
-            # outfile.write("wgt" + "\t")
-            # outfile.write("phasej" + "\n")
-            next(infile)
-            for line in infile:
-                fields = line.split()
-                sta = fields[0]
-                ttime = fields[1]
-                wgt = fields[2]
-                phasej = fields[3]
-                ievt = fields[4]
-                if ievt not in ievt_seen:
-                    outfile.write("# " + ievt + "\n")
-                    ievt_seen.add(ievt)
-                outfile.write(sta + "\t")
-                outfile.write(ttime + "\t")
-                outfile.write(wgt + "\t")
-                outfile.write(phasej + "\n")
+            ievt_seen = set()
 
-    os.remove(output_path + "/temp_abs.txt")
+            with open(output_path + "/temp_abs.txt", "r") as infile:
+                with open(output_path + "/" + file[7:14] + "_obs.txt", "w") as outfile:
+                    # outfile.write("sta" + "\t")
+                    # outfile.write("ttime" + "\t")
+                    # outfile.write("wgt" + "\t")
+                    # outfile.write("phasej" + "\n")
+                    next(infile)
+                    for line in infile:
+                        fields = line.split()
+                        sta = fields[0]
+                        ttime = fields[1]
+                        wgt = fields[2]
+                        phasej = fields[3]
+                        ievt = fields[4]
+                        if ievt not in ievt_seen:
+                            outfile.write("# " + ievt + "\n")
+                            ievt_seen.add(ievt)
+                        outfile.write(sta + "\t")
+                        outfile.write(ttime + "\t")
+                        outfile.write(wgt + "\t")
+                        outfile.write(phasej + "\n")
+
+            os.remove(output_path + "/temp_abs.txt")
 
 
 if __name__ == "__main__":
 
     # user specified working directory
-    hdf_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area/hdf"
-    res_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_phase_filter"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files"
+    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
+    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_TeletomoDD_files"
 
-    event(hdf_path, output_path)
-    abs(res_path, output_path)
+    event(input_path + "/hdf", output_path)
+    obs(input_path + "/res", output_path)

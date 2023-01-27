@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 8/20/2022
+# Date Last Modified: 1/27/2023
 # Python Version: 3.9
 
 import os
@@ -104,11 +104,11 @@ def glb(ak135_file, interp_file_glb, teletomoDD_file_path):
     # create global perturbation velocity file
     output_df(df_glb, teletomoDD_file_path, "glb_perturb")
 
-    # create plot friendly global absolute velocity file
-    plot_friendly(df_glb, teletomoDD_file_path, "glb_abs")
-
-    # create plot friendly global perturbation velocity file
-    plot_friendly(df_glb, teletomoDD_file_path, "glb_perturb")
+    # # create plot friendly global absolute velocity file
+    # plot_friendly(df_glb, teletomoDD_file_path, "glb_abs")
+    #
+    # # create plot friendly global perturbation velocity file
+    # plot_friendly(df_glb, teletomoDD_file_path, "glb_perturb")
 
 
 # function to calculate regional velocity model
@@ -137,11 +137,11 @@ def reg(ak135_file, interp_file_reg, teletomoDD_file_path):
     # create regional perturbation velocity file
     output_df(df_reg, teletomoDD_file_path, "reg_perturb")
 
-    # create plot friendly regional absolute velocity file
-    plot_friendly(df_reg, teletomoDD_file_path, "reg_abs")
-
-    # create plot friendly regional perturbation velocity file
-    plot_friendly(df_reg, teletomoDD_file_path, "reg_perturb")
+    # # create plot friendly regional absolute velocity file
+    # plot_friendly(df_reg, teletomoDD_file_path, "reg_abs")
+    #
+    # # create plot friendly regional perturbation velocity file
+    # plot_friendly(df_reg, teletomoDD_file_path, "reg_perturb")
 
 
 # function to create 3D velocity model for interpolation
@@ -173,7 +173,17 @@ def interp(mit_file, points, values, long, lat, depth, long_step, lat_step, dept
     # set desired coordinates
     long_request = np.arange(np.floor(min(long)), np.ceil(max(long)) + long_step, long_step)
     lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
-    depth_request = np.arange(min(depth), max(depth) + depth_step, depth_step)
+
+    if suffix == "glb":
+        depth_request = np.arange(min(depth), max(depth) + depth_step, depth_step)
+    elif suffix == "reg":
+        mit_depth = pd.read_csv(mit_file, delim_whitespace=True, usecols=["Depth"])
+        depth_shallow = np.array([0, 12, 25, 40, 55, 75, 95, 120, 150, 185, 225])
+        depth_deep = mit_depth[(mit_depth["Depth"] > 225) & (mit_depth["Depth"] < 1000)].drop_duplicates().to_numpy()
+        depth_request = np.concatenate((depth_shallow, depth_deep), axis=None)
+    else:
+        depth_request = 0
+        print("No MIT file found")
 
     if ".txt" in mit_file:
         with open(mit_file, "r") as infile:
@@ -200,7 +210,7 @@ def interp(mit_file, points, values, long, lat, depth, long_step, lat_step, dept
     return interp_file
 
 
-def main(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, lat_max, depth_min, depth_max, long_step_glb, lat_step_glb, depth_step_glb, long_step_reg, lat_step_reg, depth_step_reg):
+def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_min, depth_max, long_step_glb, lat_step_glb, depth_step_glb, long_step_reg, lat_step_reg, depth_step_reg):
 
     points, values, long_glb, lat_glb, depth_glb = create_model(mit_file)
 
@@ -209,10 +219,10 @@ def main(ak135_file, mit_file, teletomoDD_file_path, lon_min, lon_max, lat_min, 
     depth_reg = [depth_min, depth_max]
 
     interp_file_glb = interp(mit_file, points, values, long_glb, lat_glb, depth_glb, long_step_glb, lat_step_glb, depth_step_glb, "glb")
-    glb(ak135_file, interp_file_glb, teletomoDD_file_path)
+    glb(ak135_file, interp_file_glb, output_path)
 
     interp_file_reg = interp(mit_file, points, values, lon_reg, lat_reg, depth_reg, long_step_reg, lat_step_reg, depth_step_reg, "reg")
-    reg(ak135_file, interp_file_reg, teletomoDD_file_path)
+    reg(ak135_file, interp_file_reg, output_path)
 
 
 # run main()
@@ -221,15 +231,15 @@ if __name__ == "__main__":
     # user specified working directory
     ak135_file = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ak135.txt"
     mit_file = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ggge1202-sup-0002-ds01.txt"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files"
+    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_TeletomoDD_files"
 
     # user specified study area data extent
     lon_min = -80
     lon_max = -55
     lat_min = 5
     lat_max = 25
-    depth_min = 0
-    depth_max = 800
+    depth_min = 10
+    depth_max = 250
 
     # user specified steps for coordinate interpolation
     long_step_glb = 5
@@ -237,6 +247,6 @@ if __name__ == "__main__":
     depth_step_glb = 200
     long_step_reg = 0.5
     lat_step_reg = 0.5
-    depth_step_reg = 25
+    depth_step_reg = 10
 
     main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_min, depth_max, long_step_glb, lat_step_glb, depth_step_glb, long_step_reg, lat_step_reg, depth_step_reg)

@@ -50,6 +50,6 @@ if __name__ == "__main__":
 
     # user specified working directory
     input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_stations_list"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files"
+    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_TeletomoDD_files"
 
     main(input_path, output_path, lon_min, lon_max, lat_min, lat_max)
