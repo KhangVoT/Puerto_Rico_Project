@@ -55,9 +55,9 @@ def main(reformatted_path, study_area_path, stations_path, year_range):
 if __name__ == "__main__":
 
     # user specified working directory
-    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/02_reformatted"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
-    stations_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_TeletomoDD_files/sta_reg.txt"
+    input_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/02_reformatted"
+    output_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/03_study_area"
+    stations_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files/sta_reg.txt"
 
     # user specified year range of data
     year_min = 1964

@@ -2,12 +2,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-ak135 = pd.read_csv("/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ak135.txt", delim_whitespace=True,
+ak135 = pd.read_csv("/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/_v_list/ak135.txt", delim_whitespace=True,
                     header=None, skiprows=1)
 depth = ak135.iloc[:, 0]
 velP = ak135.iloc[:, 1]
 
-mit = pd.read_csv("/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ggge1202-sup-0002-ds01.txt",
+mit = pd.read_csv("/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/_v_list/ggge1202-sup-0002-ds01.txt",
                   delim_whitespace=True)
 depth_new = mit["Depth"].unique()
 depth_new = np.insert(depth_new, 0, -100)

@@ -73,8 +73,8 @@ def main(study_area_path, stations_path, lon_min, lon_max, lat_min, lat_max, yea
 # run main()
 if __name__ == "__main__":
     # user specified working directory
-    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
-    stations_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files/sta_reg.txt"
+    input_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/03_study_area"
+    stations_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/05_TeletomoDD_files/sta_reg.txt"
 
     # user specified year range of data
     year_min = 1964

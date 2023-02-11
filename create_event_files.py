@@ -110,8 +110,8 @@ def obs(res_path, output_path):
 if __name__ == "__main__":
 
     # user specified working directory
-    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/03_study_area"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_TeletomoDD_files"
+    input_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/03_study_area"
+    output_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files"
 
     event(input_path + "/hdf", output_path)
     obs(input_path + "/res", output_path)

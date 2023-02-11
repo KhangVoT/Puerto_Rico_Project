@@ -229,9 +229,9 @@ def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, 
 if __name__ == "__main__":
 
     # user specified working directory
-    ak135_file = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ak135.txt"
-    mit_file = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_v_list/ggge1202-sup-0002-ds01.txt"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_TeletomoDD_files"
+    ak135_file = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/_v_list/ak135.txt"
+    mit_file = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/_v_list/ggge1202-sup-0002-ds01.txt"
+    output_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files"
 
     # user specified study area data extent
     lon_min = -80

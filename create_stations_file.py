@@ -49,7 +49,7 @@ if __name__ == "__main__":
     lat_max = 25
 
     # user specified working directory
-    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/_stations_list"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_TeletomoDD_files"
+    input_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/_stations_list"
+    output_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files"
 
     main(input_path, output_path, lon_min, lon_max, lat_min, lat_max)

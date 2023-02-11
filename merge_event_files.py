@@ -52,6 +52,6 @@ def main(teletomoDD_file_path):
 # run main()
 if __name__ == "__main__":
     # user specified working directory
-    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/04_TeletomoDD_files"
+    input_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files"
 
     main(input_path)

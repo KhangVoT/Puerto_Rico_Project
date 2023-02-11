@@ -209,8 +209,8 @@ def main(raw_path, reformatted_path, year_range):
 if __name__ == "__main__":
 
     # user specified working directory
-    input_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/01_raw"
-    output_path = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/02_reformatted"
+    input_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/01_raw"
+    output_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/02_reformatted"
 
     # user specified year range of data
     year_min = 2000

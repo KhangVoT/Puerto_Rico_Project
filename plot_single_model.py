@@ -56,7 +56,7 @@ def main(file, depth):
 # run main()
 if __name__ == "__main__":
 
-    file = "/Users/khangvo/Python_Projects/Puerto_Rico_Project/files/05_TeletomoDD_files/reg_perturb_plot_friendly.txt"
+    file = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/05_TeletomoDD_files/reg_perturb_plot_friendly.txt"
 
     depth = 50
 
