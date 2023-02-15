@@ -37,10 +37,10 @@ def main(file, depth):
     m = Basemap(resolution="h", llcrnrlat=df["Lat"].min(), llcrnrlon=df["Long"].min(),
                 urcrnrlat=df["Lat"].max(), urcrnrlon=df["Long"].max(), ax=ax, suppress_ticks=False)
     m.drawcoastlines()
-    m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0, xoffset=0.5, yoffset=0.5)
-    m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0, xoffset=0.5, yoffset=0.5)
+    m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
+    m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     cl = ax.imshow(vi, origin="lower", cmap="jet", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]),
-                     extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
+                   extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
     ax.set_title("Depth = " + str(depth) + " km")
 
@@ -56,8 +56,8 @@ def main(file, depth):
 # run main()
 if __name__ == "__main__":
 
-    file = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/05_TeletomoDD_files/reg_perturb_plot_friendly.txt"
+    file = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files/reg_perturb_vel_plot_friendly.txt"
 
-    depth = 50
+    depth = 55
 
     main(file, depth)

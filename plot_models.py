@@ -37,8 +37,8 @@ def plot_models(max_i, i, j, axes, df_control, df, depth):
     m = Basemap(resolution="h", llcrnrlat=df["Lat"].min(), llcrnrlon=df["Long"].min(),
                 urcrnrlat=df["Lat"].max(), urcrnrlon=df["Long"].max(), ax=axes[j, i], suppress_ticks=False)
     m.drawcoastlines(color="black")
-    m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0, xoffset=0.5, yoffset=0.5)
-    m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0, xoffset=0.5, yoffset=0.5)
+    m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
+    m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     cl = axes[j, i].imshow(vi, origin="lower", cmap="turbo", vmin=min(df_control["Vp"]), vmax=max(df_control["Vp"]), alpha=1,
                            extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
@@ -92,6 +92,7 @@ if __name__ == "__main__":
 
     file_list = glob.glob(root + "*MOD.*") + sorted(glob.glob(root + "*.vel.*"))
 
-    depth_list = [22.6, 338.8, 745.5]
+    # depth_list = [22.6, 338.8, 745.5]
+    depth_list = [12.0, 25.0, 40.0]
 
     main(file_list, depth_list)

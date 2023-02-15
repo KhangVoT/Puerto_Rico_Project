@@ -48,10 +48,10 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
 # run main()
 if __name__ == "__main__":
     # regional events
-    events_reg = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/05_TeletomoDD_files/event.txt"
+    events_reg = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files/sta_glb_event.txt"
 
     # global events
-    events_glb = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project_Refinement/files/05_TeletomoDD_files/event.txt"
+    events_glb = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files/sta_reg_event.txt"
 
     # user specified study area data extent
     lon_min = -80

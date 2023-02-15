@@ -104,11 +104,11 @@ def glb(ak135_file, interp_file_glb, teletomoDD_file_path):
     # create global perturbation velocity file
     output_df(df_glb, teletomoDD_file_path, "glb_perturb")
 
-    # # create plot friendly global absolute velocity file
-    # plot_friendly(df_glb, teletomoDD_file_path, "glb_abs")
-    #
-    # # create plot friendly global perturbation velocity file
-    # plot_friendly(df_glb, teletomoDD_file_path, "glb_perturb")
+    # create plot friendly global absolute velocity file
+    plot_friendly(df_glb, teletomoDD_file_path, "glb_abs")
+
+    # create plot friendly global perturbation velocity file
+    plot_friendly(df_glb, teletomoDD_file_path, "glb_perturb")
 
 
 # function to calculate regional velocity model
@@ -137,11 +137,11 @@ def reg(ak135_file, interp_file_reg, teletomoDD_file_path):
     # create regional perturbation velocity file
     output_df(df_reg, teletomoDD_file_path, "reg_perturb")
 
-    # # create plot friendly regional absolute velocity file
-    # plot_friendly(df_reg, teletomoDD_file_path, "reg_abs")
-    #
-    # # create plot friendly regional perturbation velocity file
-    # plot_friendly(df_reg, teletomoDD_file_path, "reg_perturb")
+    # create plot friendly regional absolute velocity file
+    plot_friendly(df_reg, teletomoDD_file_path, "reg_abs")
+
+    # create plot friendly regional perturbation velocity file
+    plot_friendly(df_reg, teletomoDD_file_path, "reg_perturb")
 
 
 # function to create 3D velocity model for interpolation

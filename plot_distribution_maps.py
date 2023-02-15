@@ -32,8 +32,8 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     m = Basemap(resolution=None, llcrnrlat=df_reg["glat"].min(), llcrnrlon=df_reg["glon"].min(),
                 urcrnrlat=df_reg["glat"].max(), urcrnrlon=df_reg["glon"].max(), ax=ax[0], suppress_ticks=False)
     m.shadedrelief(scale=1)
-    m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0, xoffset=0.5, yoffset=0.5)
-    m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0, xoffset=0.5, yoffset=0.5)
+    m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
+    m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
 
     ax[0].set_title("Regional Data")
     ax[0].xaxis.set_major_locator(ticker.MultipleLocator(10))
@@ -95,10 +95,10 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
 # run main()
 if __name__ == "__main__":
     # regional events
-    events_reg = "/Users/khangvo/Downloads/PR_Data_Test/sta_glb/event.txt"
+    events_reg = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files/sta_glb_event.txt"
 
     # global events
-    events_glb = "/Users/khangvo/Downloads/PR_Data_Test/sta_reg/event.txt"
+    events_glb = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files/sta_reg_event.txt"
 
     # user specified study area data extent
     lon_min = -80

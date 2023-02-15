@@ -62,13 +62,13 @@ def main():
     # reformat_hdf_res.main(raw_path, reformatted_path, year_range)
 
     # run study_area_res module
-    study_area_res.main(reformatted_path + "/res", study_area_path, teletomoDD_file_path + "/sta_reg.txt", year_range)
+    study_area_res.main(reformatted_path + "/res", study_area_path, teletomoDD_file_path + "/sta_glb.txt", year_range)
 
     # run study_area_hdf module
-    study_area_hdf.main(reformatted_path + "/hdf", study_area_path, teletomoDD_file_path + "/sta_reg.txt", year_range)
+    study_area_hdf.main(reformatted_path + "/hdf", study_area_path, teletomoDD_file_path + "/sta_glb.txt", year_range)
 
     # run cut_hdf_res module
-    cut_hdf_res.main(study_area_path, teletomoDD_file_path + "/sta_reg.txt", lon_min, lon_max, lat_min, lat_max, year_range)
+    cut_hdf_res.main(study_area_path, teletomoDD_file_path + "/sta_glb.txt", lon_min, lon_max, lat_min, lat_max, year_range)
 
     # run create_event_files event module
     create_event_files.event(study_area_path + "/hdf", teletomoDD_file_path)
