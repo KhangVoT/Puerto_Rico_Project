@@ -1,7 +1,7 @@
 # File Name: create_velocity_files
 # Author: Khang Vo
 # Date Created: 3/6/2022
-# Date Last Modified: 1/27/2023
+# Date Last Modified: 3/9/2023
 # Python Version: 3.9
 
 import os
@@ -175,8 +175,13 @@ def interp(mit_file, points, values, long, lat, depth, long_step, lat_step, dept
     lat_request = np.arange(np.floor(min(lat)), np.ceil(max(lat)) + lat_step, lat_step)
 
     if suffix == "glb":
-        depth_request = np.arange(min(depth), max(depth) + depth_step, depth_step)
+        # depth_request = np.arange(min(depth), max(depth) + depth_step, depth_step)
+        mit_depth = pd.read_csv(mit_file, delim_whitespace=True, usecols=["Depth"])
+        depth_shallow = np.array([0,  55,  195,  345,  535,  750,  930, 1135, 1325, 1500, 1725, 1950, 2150, 2350, 2525, 2675, 2819.5, 6371])
+        depth_deep = mit_depth[(mit_depth["Depth"] > 6330) & (mit_depth["Depth"] < 6500)].drop_duplicates().to_numpy()
+        depth_request = np.concatenate((depth_shallow, depth_deep), axis=None)
     elif suffix == "reg":
+        # depth_request = np.arange(min(depth), max(depth) + depth_step, depth_step)
         mit_depth = pd.read_csv(mit_file, delim_whitespace=True, usecols=["Depth"])
         depth_shallow = np.array([0, 12, 25, 40, 55, 75, 95, 120, 150, 185, 225])
         depth_deep = mit_depth[(mit_depth["Depth"] > 225) & (mit_depth["Depth"] < 1000)].drop_duplicates().to_numpy()
