@@ -46,11 +46,11 @@ def output_df(df, teletomoDD_file_path, file_name):
         outfile.write(str(len(depth_unq)))
         outfile.write("\n")
         for i in long_unq:
-            outfile.write(str(format(i, ".2f")))
+            outfile.write(str(format(i, ".1f")))
             outfile.write(" ")
         outfile.write("\n")
         for j in lat_unq:
-            outfile.write(str(format(j, ".2f")))
+            outfile.write(str(format(j, ".1f")))
             outfile.write(" ")
         outfile.write("\n")
         for k in depth_unq:
