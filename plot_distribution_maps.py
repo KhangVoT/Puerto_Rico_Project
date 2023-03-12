@@ -1,7 +1,7 @@
 # File Name: plot_distribution_maps
 # Author: Khang Vo
 # Date Created: 9/21/2022
-# Date Last Modified: 10/6/2022
+# Date Last Modified: 3/11/2023
 # Python Version: 3.9
 
 import os
@@ -29,8 +29,9 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     df_reg = df_reg[(df_reg["glon"] >= lon_min) & (df_reg["glon"] <= lon_max) &
                     (df_reg["glat"] >= lat_min) & (df_reg["glat"] <= lat_max)]
 
-    m = Basemap(resolution=None, llcrnrlat=df_reg["glat"].min(), llcrnrlon=df_reg["glon"].min(),
+    m = Basemap(resolution="l", llcrnrlat=df_reg["glat"].min(), llcrnrlon=df_reg["glon"].min(),
                 urcrnrlat=df_reg["glat"].max(), urcrnrlon=df_reg["glon"].max(), ax=ax[0], suppress_ticks=False)
+    m.drawcoastlines()
     m.shadedrelief(scale=1)
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
@@ -65,7 +66,8 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     df_glb = df_glb.drop(["n1", "n2", "n3", "n4"], axis=1)
     df_glb = df_glb.astype(float)
 
-    m = Basemap(projection="ortho", resolution=None, lat_0=15, lon_0=-67.5, ax=ax[1])
+    m = Basemap(projection="ortho", resolution="l", lat_0=15, lon_0=-67.5, ax=ax[1])
+    m.drawcoastlines()
     m.shadedrelief(scale=0.5)
 
     ax[1].set_title("Global Data")
@@ -88,6 +90,8 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
 
     ax[1].legend(scatterpoints=1, frameon=True,
                  labelspacing=0.5, loc="upper right")
+
+    plt.savefig("/Users/khangvo/Downloads/Distribution_Maps.jpeg")
 
     plt.show()
 

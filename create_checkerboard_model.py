@@ -1,7 +1,7 @@
 # File Name: create_checkerboard_model
 # Author: Khang Vo
 # Date Created: 2/15/2023
-# Date Last Modified: 2/20/2022
+# Date Last Modified: 3/11/2023
 # Python Version: 3.11
 
 import os

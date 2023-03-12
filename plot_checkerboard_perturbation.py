@@ -1,7 +1,7 @@
-# File Name: plot_models
+# File Name: plot_checkerboard_perturbations
 # Author: Khang Vo
-# Date Created: 8/10/2022
-# Date Last Modified: 10/6/2022
+# Date Created: 2/15/2023
+# Date Last Modified: 3/11/2023
 # Python Version: 3.9
 
 import os
@@ -70,9 +70,9 @@ def main(file_list, depth_list):
     for j, depth in enumerate(depth_list):
         plot_models(j, axes, df_merged, depth)
 
-    plt.show()
-
     plt.savefig("/Users/khangvo/Downloads/velocity_models_abs.jpeg")
+
+    plt.show()
 
 
 # run main()
