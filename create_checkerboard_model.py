@@ -2,7 +2,7 @@
 # Author: Khang Vo
 # Date Created: 2/15/2023
 # Date Last Modified: 3/11/2023
-# Python Version: 3.11
+# Python Version: 3.10
 
 import os
 import glob
