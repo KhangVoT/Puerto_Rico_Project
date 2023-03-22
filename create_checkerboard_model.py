@@ -102,9 +102,9 @@ def glb(ak135_file, interp_file_glb, teletomoDD_file_path):
     grid_dimension = 10
     mul_init = 0.1
 
-    k = 0
+    k = -2
     for _ in df_glb["Depth"].unique():
-        if k == grid_dimension:
+        if k == 3:
             mul_init = mul_init * -1
             k = 0
         mul = mul_init
@@ -177,9 +177,9 @@ def reg(ak135_file, interp_file_reg, teletomoDD_file_path):
     grid_dimension = 10
     mul_init = 0.1
 
-    k = 0
+    k = -2
     for _ in df_reg["Depth"].unique():
-        if k == grid_dimension:
+        if k == 3:
             mul_init = mul_init * -1
             k = 0
         mul = mul_init
