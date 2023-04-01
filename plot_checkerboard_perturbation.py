@@ -18,7 +18,7 @@ from mpl_toolkits.basemap import Basemap
 
 def plot_models(i, j, axes, df, depth):
     # cut df_vp to desired depth
-    df = df[df["Depth"] == str(depth)].astype(float)
+    df = df[df["Depth"] == depth].astype(float)
 
     df["Per"] = ((df["Vp_y"] - df["Vp_x"]) / df["Vp_x"]) * 100
 
@@ -38,9 +38,9 @@ def plot_models(i, j, axes, df, depth):
     m.drawcoastlines(color="black")
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
-    cl = axes[i, j].imshow(vi, origin="lower", cmap="seismic", vmin=-10, vmax=10, alpha=1,
-                           extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
-    # cl = axes[i, j].scatter(df["Long"], df["Lat"], c=df["Per"],  marker="s", s=20, cmap="seismic", vmin=-10, vmax=10, alpha=1)
+    # cl = axes[i, j].imshow(vi, origin="lower", cmap="seismic", vmin=-10, vmax=10, alpha=1,
+    #                        extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
+    cl = axes[i, j].scatter(df["Long"], df["Lat"], c=df["Per"],  marker="s", s=10, cmap="seismic", vmin=-10, vmax=10, alpha=1)
 
     axes[i, j].set_title("Depth = " + str(depth) + " km")
 
@@ -52,10 +52,10 @@ def plot_models(i, j, axes, df, depth):
     cb.set_label("dVp %")
 
 
-def main(file_list, depth_list):
+def main(file_list, depth_list, lon_min, lon_max, lat_min, lat_max):
     # create main plot
     fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(19, 9))
-    fig.suptitle("Checkerboard Test (D2 = 10 +-10%)")
+    fig.suptitle("Checkerboard Test (D2 = 3 +-10%)")
 
     for file in file_list:
         if "MOD" in file:
@@ -66,6 +66,11 @@ def main(file_list, depth_list):
             df_vel.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
 
     df_merged = pd.merge(df_mod, df_vel, how="left", on=["Long", "Lat", "Depth"])
+
+    df_merged = df_merged[0:df_merged[df_merged["Long"] == ">"].index[0]].apply(pd.to_numeric, errors="coerce").dropna()
+
+    df_merged = df_merged[(df_merged["Long"].astype(float) >= lon_min) & (df_merged["Long"].astype(float) <= lon_max) &
+                          (df_merged["Lat"].astype(float) >= lat_min) & (df_merged["Lat"].astype(float) <= lat_max)]
 
     # read individual files in file list
     for j, depth in enumerate(depth_list):
@@ -88,7 +93,18 @@ if __name__ == "__main__":
 
     file_list = glob.glob(root + "*MOD.*") + sorted(glob.glob(root + "*.vel.*"))
 
-    # depth_list = [12.0, 40.0, 75.0, 120.0, 185.0, 225.0]
-    depth_list = [25.0, 75.0, 150.0, 248.5, 338.8, 474.4]
+    depth_list = [12.0, 40.0, 75.0, 120.0, 185.0, 225.0]
+    # depth_list = [25.0, 75.0, 150.0, 248.5, 384.0, 519.6]
+    # depth_list = [12.0, 25.0, 40.0, 55.0, 75.0, 95.0]
+    # depth_list = [120.0, 150.0, 185.0, 225.0, 248.5, 293.7]
+    # depth_list = [338.8, 384.0, 429.2, 474.4, 519.6, 564.7]
 
-    main(file_list, depth_list)
+    # user specified study area data extent
+    lon_min = -80
+    lon_max = -55
+    lat_min = 5
+    lat_max = 25
+    depth_min = 10
+    depth_max = 250
+
+    main(file_list, depth_list, lon_min, lon_max, lat_min, lat_max)

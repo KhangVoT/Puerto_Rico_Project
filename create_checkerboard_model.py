@@ -179,7 +179,7 @@ def reg(ak135_file, interp_file_reg, teletomoDD_file_path):
 
     k = -2
     for _ in df_reg["Depth"].unique():
-        if k == 3:
+        if k == grid_dimension:
             mul_init = mul_init * -1
             k = 0
         mul = mul_init
