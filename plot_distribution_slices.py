@@ -52,7 +52,7 @@ def main(events_master, mod, lon_min, lon_max, lat_min, lat_max, depth_list):
     fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(19, 9))
     fig.suptitle("Distribution by Depths")
 
-    # plot regional events
+    # plot master events
     df_events = pd.read_csv(events_master, delim_whitespace=True)
     df_events.columns = ["date", "time", "glat", "glon", "depth", "mb", "n1", "n2", "n3", "ievt", "n4"]
     df_events = df_events.drop(["n1", "n2", "n3", "n4"], axis=1)
