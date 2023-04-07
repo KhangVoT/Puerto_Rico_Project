@@ -39,7 +39,7 @@ def main(file, depth):
     m.drawcoastlines()
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
-    cl = ax.imshow(vi, origin="lower", cmap="jet", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]),
+    cl = ax.imshow(vi, origin="lower", cmap="turbo", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]),
                    extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
     ax.set_title("Depth = " + str(depth) + " km")

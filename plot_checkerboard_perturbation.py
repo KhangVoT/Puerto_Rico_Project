@@ -38,9 +38,11 @@ def plot_models(i, j, axes, df, depth):
     m.drawcoastlines(color="black")
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
-    # cl = axes[i, j].imshow(vi, origin="lower", cmap="seismic", vmin=-10, vmax=10, alpha=1,
-    #                        extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
-    cl = axes[i, j].scatter(df["Long"], df["Lat"], c=df["Per"],  marker="s", s=10, cmap="seismic", vmin=-10, vmax=10, alpha=1)
+    cl = axes[i, j].imshow(vi, origin="lower", cmap="seismic", vmin=-10, vmax=10, alpha=1,
+                           extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
+    # cl = axes[i, j].contourf(vi, origin="lower", cmap="jet", vmin=min(df["Per"]), vmax=max(df["Per"]),
+    #                          extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
+    # cl = axes[i, j].scatter(df["Long"], df["Lat"], c=df["Per"],  marker="s", s=10, cmap="seismic", vmin=-10, vmax=10, alpha=1)
 
     axes[i, j].set_title("Depth = " + str(depth) + " km")
 
