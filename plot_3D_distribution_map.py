@@ -51,9 +51,9 @@ def plot3d(df):
     ax.add_collection3d(sea_color, zs=-49.9)
 
     ax.view_init(azim=-135, elev=15)
-    ax.set_xlabel('Longitude (°E)', labelpad=20)
-    ax.set_ylabel('Latitude (°N)', labelpad=20)
-    ax.set_zlabel('Depth (km)', labelpad=20)
+    ax.set_xlabel("Longitude (°E)", labelpad=20)
+    ax.set_ylabel("Latitude (°N)", labelpad=20)
+    ax.set_zlabel("Depth (km)", labelpad=20)
     ax.xaxis.set_major_locator(ticker.MultipleLocator(10))
     ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
     ax.zaxis.set_major_locator(ticker.MultipleLocator(50))

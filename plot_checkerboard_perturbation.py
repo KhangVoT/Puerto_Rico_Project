@@ -27,7 +27,7 @@ def plot_models(i, j, axes, df, depth):
                          np.arange(df["Lat"].min(), df["Lat"].max(), 0.1))
 
     # do radial basic function interpolation for Vp
-    rbfi = Rbf(df["Long"], df["Lat"], df["Per"], function="multiquadric", smooth=0.1)
+    rbfi = Rbf(df["Long"], df["Lat"], df["Per"], function="multiquadric", smooth=10)
     vi = rbfi(xi, yi)
 
     # create subplots

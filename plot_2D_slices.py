@@ -1,7 +1,7 @@
 # File Name: plot_2D_slices
 # Author: Khang Vo
 # Date Created: 4/6/2023
-# Date Last Modified: 4/6/2023
+# Date Last Modified: 4/9/2023
 # Python Version: 3.10
 
 import os
@@ -16,36 +16,58 @@ from scipy.interpolate import Rbf
 from mpl_toolkits.basemap import Basemap
 
 
-def main(df_original):
+def plot(df_merged, ax):
 
-    # create main plot
-    fig = plt.figure()
-    fig.suptitle("Volumetric Data", fontsize=18, y=0.90)
-    ax = fig.add_subplot(projection="3d")
+    lat_list = np.array(df_merged["Lat"].unique())
 
-    depth_list = np.array(df_original["Depth"].unique())
-
-    for depth in depth_list:
-        df = df_original[df_original["Depth"] == depth]
+    for lat in lat_list:
+        df = df_merged[df_merged["Lat"] == lat]
         # cl = ax.contourf(vi, origin="lower", cmap="jet", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]),
         #                extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
-        # cl = ax.scatter3D(df["Long"], df["Lat"], df["Depth"], c=df['Vel_Perturb'], cmap="turbo", alpha=1)
-        cl = ax.scatter3D(df["Long"], df["Lat"], df["Depth"], c=df['Vel_Perturb'], cmap="turbo",
-                          vmin=min(df_original["Vel_Perturb"]), vmax=max(df_original["Vel_Perturb"]), alpha=0.1)
+        # cl = ax.scatter3D(df["Long"], df["Lat"], df["Depth"], c=df["Vel_Perturb"], cmap="turbo", alpha=1)
+        cl = ax.scatter3D(df["Long"], df["Lat"], df["Depth"], c=df["Per"], marker="s", s=25, cmap="seismic", vmin=-10, vmax=10, alpha=0.5)
 
     ax.view_init(azim=-135, elev=15)
-    ax.set_xlabel('Longitude (°E)', labelpad=20)
-    ax.set_ylabel('Latitude (°N)', labelpad=20)
-    ax.set_zlabel('Depth (km)', labelpad=20)
+    ax.set_xlabel("Longitude (°E)", labelpad=20)
+    ax.set_ylabel("Latitude (°N)", labelpad=20)
+    ax.set_zlabel("Depth (km)", labelpad=20)
     ax.xaxis.set_major_locator(ticker.MultipleLocator(10))
     ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
     ax.zaxis.set_major_locator(ticker.MultipleLocator(250))
-    ax.set_zlim(min(df_original["Depth"]), max(df_original["Depth"]))
+    ax.set_zlim(min(df_merged["Depth"]), max(df_merged["Depth"]))
 
     ax.invert_zaxis()
     cbar = plt.colorbar(cl, ax=ax, shrink=0.9)
     cbar.set_label("km")
     cbar.ax.invert_yaxis()
+
+
+def main(file_list, lat_list, lon_min, lon_max, lat_min, lat_max):
+    # create main plot
+    fig = plt.figure()
+    fig.suptitle("2D Slices", fontsize=18, y=0.90)
+    ax = fig.add_subplot(projection="3d")
+
+    for file in file_list:
+        if "MOD" in file:
+            df_mod = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
+            df_mod.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
+        elif "vel" in file:
+            df_vel = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
+            df_vel.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
+
+    df_merged = pd.merge(df_mod, df_vel, how="left", on=["Long", "Lat", "Depth"])
+
+    df_merged = df_merged[0:df_merged[df_merged["Long"] == ">"].index[0]].apply(pd.to_numeric, errors="coerce").dropna()
+
+    df_merged = df_merged[(df_merged["Long"].astype(float) >= lon_min) & (df_merged["Long"].astype(float) <= lon_max) &
+                          (df_merged["Lat"].astype(float) >= lat_min) & (df_merged["Lat"].astype(float) <= lat_max)]
+
+    df_merged = df_merged[df_merged["Lat"].isin(lat_list)]
+
+    df_merged["Per"] = ((df_merged["Vp_y"] - df_merged["Vp_x"]) / df_merged["Vp_x"]) * 100
+
+    plot(df_merged, ax)
 
     plt.show()
 
@@ -53,13 +75,18 @@ def main(df_original):
 # run main()
 if __name__ == "__main__":
 
-    file = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files/reg_perturb_vel_plot_friendly.txt"
-    df_original = pd.read_csv(file, sep="\t")
+    root = "/Users/khangvo/Downloads/"
 
-    depth_list = np.array(df_original["Depth"].unique())
-    depth_list = depth_list[depth_list < 150]
+    file_list = glob.glob(root + "*MOD.*") + sorted(glob.glob(root + "*.vel.*"))
 
-    df_original = df_original[df_original["Depth"].isin(depth_list[1::])]
-    print(df_original)
+    lat_list = [5.0, 10.0, 15.0, 20.0, 25.0]
 
-    main(df_original)
+    # user specified study area data extent
+    lon_min = -80
+    lon_max = -55
+    lat_min = 5
+    lat_max = 25
+    depth_min = 10
+    depth_max = 250
+
+    main(file_list, lat_list, lon_min, lon_max, lat_min, lat_max)
