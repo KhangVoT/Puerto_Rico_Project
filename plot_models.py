@@ -1,7 +1,7 @@
-# File Name: plot_models
+# File Name: plot_checkerboard_perturbations
 # Author: Khang Vo
-# Date Created: 8/10/2022
-# Date Last Modified: 10/6/2022
+# Date Created: 2/15/2023
+# Date Last Modified: 3/20/2023
 # Python Version: 3.9
 
 import os
@@ -16,71 +16,71 @@ from scipy.interpolate import Rbf
 from mpl_toolkits.basemap import Basemap
 
 
-def plot_models(max_i, i, j, axes, df_control, df, depth):
+def plot_models(i, j, axes, df, depth):
     # cut df_vp to desired depth
-    df = df[df["Depth"] == str(depth)].astype(float)
+    df = df[df["Depth"] == depth].astype(float)
+
+    df["Per"] = ((df["Vp_y"] - df["Vp_x"]) / df["Vp_x"]) * 100
 
     # build a regular grid with n cells
     xi, yi = np.meshgrid(np.arange(df["Long"].min(), df["Long"].max(), 0.1),
                          np.arange(df["Lat"].min(), df["Lat"].max(), 0.1))
 
     # do radial basic function interpolation for Vp
-    rbfi = Rbf(df["Long"], df["Lat"], df["Vp"], function="multiquadric", smooth=0.1)
+    rbfi = Rbf(df["Long"], df["Lat"], df["Per"], function="multiquadric", smooth=5)
     vi = rbfi(xi, yi)
-
-    # cut df_control to desired depth
-    df_control = df_control[df_control["Depth"] == str(depth)].astype(float)
 
     # create subplots
 
     # plot initial model
     m = Basemap(resolution="h", llcrnrlat=df["Lat"].min(), llcrnrlon=df["Long"].min(),
-                urcrnrlat=df["Lat"].max(), urcrnrlon=df["Long"].max(), ax=axes[j, i], suppress_ticks=False)
+                urcrnrlat=df["Lat"].max(), urcrnrlon=df["Long"].max(), ax=axes[i, j], suppress_ticks=False)
     m.drawcoastlines(color="black")
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
-    cl = axes[j, i].imshow(vi, origin="lower", cmap="turbo", vmin=min(df_control["Vp"]), vmax=max(df_control["Vp"]), alpha=1,
+    cl = axes[i, j].imshow(vi, origin="lower", cmap="turbo", vmin=-10, vmax=10, alpha=1,
                            extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
-    if i == 0:
-        axes[j, i].set_title("(Initial) " + " Depth = " + str(depth) + " km")
-    elif i > 0:
-        axes[j, i].set_title("(N" + str(i) + ") Depth = " + str(depth) + " km")
+    axes[i, j].set_title("Depth = " + str(depth) + " km")
 
-    axes[j, i].xaxis.set_major_locator(ticker.MultipleLocator(10))
-    axes[j, i].yaxis.set_major_locator(ticker.MultipleLocator(10))
-    axes[j, i].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
+    axes[i, j].xaxis.set_major_locator(ticker.MultipleLocator(10))
+    axes[i, j].yaxis.set_major_locator(ticker.MultipleLocator(10))
+    axes[i, j].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
 
-    if i == max_i:
-        cb = plt.colorbar(cl, ax=axes[j, i], shrink=0.685)
-        cb.set_label("Vp (km/s)")
+    cb = plt.colorbar(cl, ax=axes[i, j], shrink=0.88)
+    cb.set_label("dVp %")
 
 
-def main(file_list, depth_list):
+def main(file_list, depth_list, lon_min, lon_max, lat_min, lat_max):
     # create main plot
-    fig, axes = plt.subplots(nrows=len(depth_list), ncols=len(file_list), figsize=(19, 9), constrained_layout=True)
+    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(19, 9))
     fig.suptitle("Velocity Models (Perturbation)", fontsize=18, y=0.995)
 
-    # create control file to set global color bar
-    df_control_list = []
     for file in file_list:
-        df_control = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
-        df_control.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
-        df_control = df_control.drop(["Num1"], axis=1)
-        df_control_list.append(df_control)
-    df_control = pd.concat(df_control_list, ignore_index=True)
+        if "MOD" in file:
+            df_mod = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
+            df_mod.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
+        elif "vel" in file:
+            df_vel = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
+            df_vel.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
 
-    # read individual files in file list
-    for i, file in enumerate(file_list):
-        df = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
-        df.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
-        df = df.drop(["Num1"], axis=1)
+    df_merged = pd.merge(df_mod, df_vel, how="left", on=["Long", "Lat", "Depth"])
 
-        # loop through each depth to add to subplots
-        for j, depth in enumerate(depth_list):
-            plot_models(len(file_list) - 1, i, j, axes, df_control, df, depth)
+    df_merged = df_merged[0:df_merged[df_merged["Long"] == ">"].index[0]].apply(pd.to_numeric, errors="coerce").dropna()
 
-    plt.savefig("/Users/khangvo/Downloads/Velocity_Models_abs.jpeg")
+    df_merged = df_merged[(df_merged["Long"].astype(float) >= lon_min) & (df_merged["Long"].astype(float) <= lon_max) &
+                          (df_merged["Lat"].astype(float) >= lat_min) & (df_merged["Lat"].astype(float) <= lat_max)]
+
+    # loop through each depth to add to subplots
+    for j, depth in enumerate(depth_list):
+        if j <= 2:
+            i = 0
+        else:
+            j -= 3
+            i = 1
+        plot_models(i, j, axes, df_merged, depth)
+
+    plt.savefig("/Users/khangvo/Downloads/Velocity_Models_perturb.jpeg")
 
     plt.show()
 
@@ -92,7 +92,18 @@ if __name__ == "__main__":
 
     file_list = glob.glob(root + "*MOD.*") + sorted(glob.glob(root + "*.vel.*"))
 
-    # depth_list = [22.6, 338.8, 745.5]
-    depth_list = [12.0, 40.0, 75.0]
+    depth_list = [12.0, 40.0, 75.0, 120.0, 185.0, 225.0]
+    # depth_list = [25.0, 75.0, 150.0, 248.5, 384.0, 519.6]
+    # depth_list = [12.0, 25.0, 40.0, 55.0, 75.0, 95.0]
+    # depth_list = [120.0, 150.0, 185.0, 225.0, 248.5, 293.7]
+    # depth_list = [338.8, 384.0, 429.2, 474.4, 519.6, 564.7]
 
-    main(file_list, depth_list)
+    # user specified study area data extent
+    lon_min = -80
+    lon_max = -55
+    lat_min = 5
+    lat_max = 25
+    depth_min = 10
+    depth_max = 250
+
+    main(file_list, depth_list, lon_min, lon_max, lat_min, lat_max)

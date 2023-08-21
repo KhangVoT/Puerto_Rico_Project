@@ -27,7 +27,7 @@ def plot_models(i, j, axes, df, depth):
                          np.arange(df["Lat"].min(), df["Lat"].max(), 0.1))
 
     # do radial basic function interpolation for Vp
-    rbfi = Rbf(df["Long"], df["Lat"], df["Per"], function="multiquadric", smooth=10)
+    rbfi = Rbf(df["Long"], df["Lat"], df["Per"], function="multiquadric", smooth=5)
     vi = rbfi(xi, yi)
 
     # create subplots
@@ -74,7 +74,7 @@ def main(file_list, depth_list, lon_min, lon_max, lat_min, lat_max):
     df_merged = df_merged[(df_merged["Long"].astype(float) >= lon_min) & (df_merged["Long"].astype(float) <= lon_max) &
                           (df_merged["Lat"].astype(float) >= lat_min) & (df_merged["Lat"].astype(float) <= lat_max)]
 
-    # read individual files in file list
+    # loop through each depth to add to subplots
     for j, depth in enumerate(depth_list):
         if j <= 2:
             i = 0
@@ -83,7 +83,7 @@ def main(file_list, depth_list, lon_min, lon_max, lat_min, lat_max):
             i = 1
         plot_models(i, j, axes, df_merged, depth)
 
-    plt.savefig("/Users/khangvo/Downloads/velocity_models_abs.jpeg")
+    plt.savefig("/Users/khangvo/Downloads/checkerboard.jpeg")
 
     plt.show()
 
