@@ -62,6 +62,8 @@ def main():
     for i, txt in enumerate(d2):
         ax.annotate(txt, (mod_rms_norm[i], abs_var_norm[i]), textcoords="offset points", xytext=(10, 0), ha="left")
 
+    plt.savefig("/Users/khangvo/Downloads/Tradeoff_Curve.jpeg", bbox_inches="tight")
+
     plt.show()
 
 

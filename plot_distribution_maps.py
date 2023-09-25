@@ -19,7 +19,6 @@ from mpl_toolkits.basemap import Basemap
 def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     # create main plot
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(19, 9), constrained_layout=True)
-    # fig.suptitle("Distribution Map", fontsize=18, y=0.995)
 
     # plot regional events
     df_reg = pd.read_csv(events_reg, delim_whitespace=True)
@@ -91,7 +90,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     ax[1].legend(scatterpoints=1, frameon=True,
                  labelspacing=0.5, loc="upper right")
 
-    plt.savefig("/Users/khangvo/Downloads/Distribution_Maps.jpeg")
+    plt.savefig("/Users/khangvo/Downloads/Distribution_Maps.jpeg", bbox_inches="tight")
 
     plt.show()
 

@@ -42,7 +42,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     ax[1].set_ylabel("Number of Earthquakes")
     ax[1].grid(True)
 
-    plt.savefig("/Users/khangvo/Downloads/Histogram.jpeg")
+    plt.savefig("/Users/khangvo/Downloads/Histogram.jpeg", bbox_inches="tight")
 
     plt.show()
 

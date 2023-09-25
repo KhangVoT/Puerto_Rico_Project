@@ -1,4 +1,4 @@
-# File Name: plot_models
+# File Name: plot_models_iterations
 # Author: Khang Vo
 # Date Created: 8/10/2022
 # Date Last Modified: 10/6/2022
@@ -59,7 +59,7 @@ def plot_models(max_i, i, j, axes, df_control, df, depth):
 def main(file_list, depth_list):
     # create main plot
     fig, axes = plt.subplots(nrows=len(depth_list), ncols=len(file_list), figsize=(19, 9), constrained_layout=True)
-    fig.suptitle("Velocity Models (Perturbation)", fontsize=18, y=0.995)
+    fig.suptitle("Velocity Models (Perturbation)", fontsize=18, y=0.95)
 
     # create control file to set global color bar
     df_control_list = []
@@ -93,5 +93,6 @@ if __name__ == "__main__":
     file_list = glob.glob(root + "*MOD.*") + sorted(glob.glob(root + "*.vel.*"))
 
     depth_list = [12.0, 40.0, 75.0]
+    # depth_list = [120.0, 185.0, 225.0]
 
     main(file_list, depth_list)

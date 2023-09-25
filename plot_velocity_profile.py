@@ -33,4 +33,7 @@ ax.yaxis.set_label_position("left")
 ax.yaxis.set_ticks_position("left")
 ax.yaxis.grid(linestyle="-", color="gray")
 plt.title("MIT Interpolated")
+
+plt.savefig("/Users/khangvo/Downloads/Velocity_Profile.jpeg", bbox_inches="tight")
+
 plt.show()

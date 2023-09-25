@@ -69,7 +69,7 @@ def main(events_master, mod, lon_min, lon_max, lat_min, lat_max, depth_list):
             i = 1
         plot_models(i, j, axes, df_events, depth, depth_list)
 
-    plt.savefig("/Users/khangvo/Downloads/Distribution_Maps.jpeg")
+    plt.savefig("/Users/khangvo/Downloads/Distribution_Slices.jpeg", bbox_inches="tight")
 
     plt.show()
 

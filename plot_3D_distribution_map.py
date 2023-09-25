@@ -26,8 +26,8 @@ def read_df(path, lon_min, lon_max, lat_min, lat_max):
 
 
 def plot3d(df):
-    fig = plt.figure()
-    fig.suptitle("3D Distribution Map", fontsize=18, y=0.90)
+    fig = plt.figure(figsize=(10, 10))
+    fig.suptitle("3D Distribution Map", fontsize=18, y=0.80)
     ax = fig.add_subplot(projection="3d")
     # Define lower left, uperright lontitude and lattitude respectively
     m = Basemap(resolution="h", llcrnrlat=df["glat"].min(), llcrnrlon=df["glon"].min(),
@@ -51,9 +51,9 @@ def plot3d(df):
     ax.add_collection3d(sea_color, zs=-49.9)
 
     ax.view_init(azim=-135, elev=15)
-    ax.set_xlabel("Longitude (°E)", labelpad=20)
-    ax.set_ylabel("Latitude (°N)", labelpad=20)
-    ax.set_zlabel("Depth (km)", labelpad=20)
+    ax.set_xlabel("Longitude (°E)", labelpad=10)
+    ax.set_ylabel("Latitude (°N)", labelpad=10)
+    ax.set_zlabel("Depth (km)", labelpad=10)
     ax.xaxis.set_major_locator(ticker.MultipleLocator(10))
     ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
     ax.zaxis.set_major_locator(ticker.MultipleLocator(50))
@@ -62,7 +62,7 @@ def plot3d(df):
     img = ax.scatter(df["glon"], df["glat"], df["depth"], c=df["depth"], s=5, cmap="turbo")
 
     ax.invert_zaxis()
-    cbar = plt.colorbar(cl, ax=ax, shrink=0.9)
+    cbar = plt.colorbar(cl, ax=ax, shrink=0.7)
     cbar.set_label("km")
     cbar.ax.invert_yaxis()
 
@@ -79,6 +79,9 @@ def main():
     df = read_df(model_path, lon_min, lon_max, lat_min, lat_max)
 
     plot3d(df)
+
+    plt.savefig("/Users/khangvo/Downloads/3D_Distribution_Maps.jpeg", bbox_inches="tight", pad_inches=0.5)
+
     plt.show()
 
 

@@ -50,6 +50,8 @@ def main(file, depth):
     cbar = plt.colorbar(cl, ax=ax)
     cbar.set_label("Vp (km/s)")
 
+    plt.savefig("/Users/khangvo/Downloads/Velocity_Model_perturb.jpeg", bbox_inches="tight")
+
     plt.show()
 
 
