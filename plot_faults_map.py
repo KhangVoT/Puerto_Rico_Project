@@ -44,7 +44,7 @@ def main(faults_path, lon_min, lon_max, lat_min, lat_max):
 # run main()
 if __name__ == "__main__":
     # faults
-    faults_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/_fault_shp/flt6bg.shp"
+    faults_path = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/_shp/central_am_carib_faults-master/shapefile/central_am_caribbean_faults.shp"
 
     # user specified study area data extent
     lon_min = -80
