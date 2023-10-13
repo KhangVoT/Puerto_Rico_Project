@@ -38,7 +38,7 @@ def plot_glb(file, depth):
     m.drawcoastlines()
     m.drawparallels(np.arange(-90, 90, 30), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=5, yoffset=5)
     m.drawmeridians(np.arange(0, 360, 30), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=5, yoffset=5)
-    cl = ax.imshow(vi, origin="lower", cmap="turbo", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]),
+    cl = ax.imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]),
                    extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
     # cl = m.scatter(df["Long"], df["Lat"], latlon=True, c=df["Vel_Perturb"], cmap="turbo", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]), alpha=1)
@@ -79,7 +79,7 @@ def plot_reg(file, depth):
     m.drawcoastlines()
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
-    cl = ax.imshow(vi, origin="lower", cmap="turbo", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]),
+    cl = ax.imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df["Vel_Perturb"]), vmax=max(df["Vel_Perturb"]),
                    extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
     ax.set_title("Depth = " + str(depth) + " km")

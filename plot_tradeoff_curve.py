@@ -55,7 +55,7 @@ def main():
 
     ax.set_title("Tradeoff Curve")
     ax.set_xlabel("Model rms")
-    ax.set_xscale("log")
+    # ax.set_xscale("log")
     ax.set_ylabel("Absolute Variance")
     # ax.set_yscale("log")
 

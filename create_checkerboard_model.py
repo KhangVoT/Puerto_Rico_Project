@@ -174,7 +174,7 @@ def reg(ak135_file, interp_file_reg, teletomoDD_file_path):
     df_reg["Vel_Perturb"] = df_reg["Vel"] * (1 + df_reg["dVp"] / 100)
 
     index = 0
-    grid_dimension = 10
+    grid_dimension = 6
     mul_init = 0.1
 
     k = -2

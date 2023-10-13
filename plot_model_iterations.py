@@ -1,7 +1,7 @@
 # File Name: plot_models_iterations
 # Author: Khang Vo
 # Date Created: 8/10/2022
-# Date Last Modified: 10/6/2022
+# Date Last Modified: 10/6/2023
 # Python Version: 3.9
 
 import os
@@ -39,7 +39,7 @@ def plot_models(max_i, i, j, axes, df_control, df, depth):
     m.drawcoastlines(color="black")
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
-    cl = axes[j, i].imshow(vi, origin="lower", cmap="turbo", vmin=min(df_control["Vp"]), vmax=max(df_control["Vp"]), alpha=1,
+    cl = axes[j, i].imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df_control["Vp"]), vmax=max(df_control["Vp"]), alpha=1,
                            extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
     if i == 0:
@@ -59,7 +59,7 @@ def plot_models(max_i, i, j, axes, df_control, df, depth):
 def main(file_list, depth_list):
     # create main plot
     fig, axes = plt.subplots(nrows=len(depth_list), ncols=len(file_list), figsize=(19, 9), constrained_layout=True)
-    fig.suptitle("Velocity Models (Perturbation)", fontsize=18, y=0.95)
+    # fig.suptitle("Velocity Models (Perturbation)", fontsize=18, y=0.95)
 
     # create control file to set global color bar
     df_control_list = []

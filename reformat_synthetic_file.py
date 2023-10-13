@@ -17,8 +17,6 @@ def obs(input_file, output_path):
     df_res = pd.read_csv(input_file, delim_whitespace=True)
     df_res.columns = ["ievt", "sta", "ttime", "wgt", "phasej"]
 
-    print(df_res["ievt"].value_counts())
-
     c_res = df_res[["ievt", "sta", "ttime", "wgt", "phasej"]]
 
     c_res.to_csv(output_path + "/temp_abs.txt", sep="\t", index=False)
