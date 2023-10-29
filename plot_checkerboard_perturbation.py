@@ -40,8 +40,7 @@ def plot_models(ax, df, depth):
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     cl = ax.imshow(vi, origin="lower", cmap="seismic_r", vmin=-10, vmax=10, alpha=1,
                            extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
-    ax.tricontour(df["Long"], df["Lat"], df["Dws"], levels=[10000], linewidths=1, colors="lime")
-    # cl = ax.scatter(df["Long"], df["Lat"], c=df["Per"],  marker="s", s=20, cmap="seismic", vmin=-10, vmax=10, alpha=1)
+    ax.tricontour(df["Long"], df["Lat"], df["Dws"], levels=[1000], linewidths=1, colors="lime")
 
     ax.set_title("Depth = " + str(depth) + " km")
 
