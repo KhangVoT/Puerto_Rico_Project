@@ -17,8 +17,8 @@ def plot_models(ax, df, lat, min_depth, max_depth):
     df = df[df["Lat"] == lat].astype(float)
 
     # create grid and interpolate
-    xi, zi = np.mgrid[df["Depth"].min():df["Depth"].max():1, df["Long"].min():df["Long"].max():0.1]
-    vi = griddata((df["Depth"], df["Long"]), df["Vp"], (xi, zi), method="cubic")
+    zi, xi = np.mgrid[df["Depth"].min():df["Depth"].max():1, df["Long"].min():df["Long"].max():0.1]
+    vi = griddata((df["Depth"], df["Long"]), df["Vp"], (zi, xi), method="cubic")
 
     # plot subplots
     cl = ax.imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df["Vp"]), vmax=max(df["Vp"]),
