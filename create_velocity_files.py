@@ -144,29 +144,6 @@ def reg(ak135_file, interp_file_reg, teletomoDD_file_path):
     plot_friendly(df_reg, teletomoDD_file_path, "reg_perturb")
 
 
-# function to create 3D velocity model for interpolation
-def create_model(mit_file):
-    df = pd.read_csv(mit_file, delim_whitespace=True)
-
-    # extract the list of coordinates
-    xs = np.array(df["Long"].to_list())
-    ys = np.array(df["Lat"].to_list())
-    zs = np.array(df["Depth"].to_list())
-    # extract the associated velocity values
-    vs = np.array(df["dVp"].to_list())
-
-    px, ix = np.unique(xs, return_inverse=True)
-    py, iy = np.unique(ys, return_inverse=True)
-    pz, iz = np.unique(zs, return_inverse=True)
-
-    points = (px, py, pz)
-
-    values = np.empty_like(vs, shape=(px.size, py.size, pz.size))
-    values[ix, iy, iz] = vs
-
-    return points, values, df["Long"], df["Lat"], df["Depth"]
-
-
 # function to interpolate velocities
 def interp(mit_file, points, values, long, lat, depth, long_step, lat_step, depth_step, suffix):
 
@@ -213,6 +190,29 @@ def interp(mit_file, points, values, long, lat, depth, long_step, lat_step, dept
 
     interp_file = mit_file[0:-4] + "_interp_" + suffix + ".txt"
     return interp_file
+
+
+# function to create 3D velocity model for interpolation
+def create_model(mit_file):
+    df = pd.read_csv(mit_file, delim_whitespace=True)
+
+    # extract the list of coordinates
+    xs = np.array(df["Long"].to_list())
+    ys = np.array(df["Lat"].to_list())
+    zs = np.array(df["Depth"].to_list())
+    # extract the associated velocity values
+    vs = np.array(df["dVp"].to_list())
+
+    px, ix = np.unique(xs, return_inverse=True)
+    py, iy = np.unique(ys, return_inverse=True)
+    pz, iz = np.unique(zs, return_inverse=True)
+
+    points = (px, py, pz)
+
+    values = np.empty_like(vs, shape=(px.size, py.size, pz.size))
+    values[ix, iy, iz] = vs
+
+    return points, values, df["Long"], df["Lat"], df["Depth"]
 
 
 def main(ak135_file, mit_file, output_path, lon_min, lon_max, lat_min, lat_max, depth_min, depth_max, long_step_glb, lat_step_glb, depth_step_glb, long_step_reg, lat_step_reg, depth_step_reg):

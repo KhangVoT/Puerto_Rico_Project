@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 
 
-def plot_models(i, j, axes, df, lat, min_depth, max_depth):
+def plot_models(ax, df, lat, min_depth, max_depth):
     # cutting df
     df = df[min_depth <= df["Depth"]].astype(float)
     df = df[df["Depth"] <= max_depth].astype(float)
@@ -21,21 +21,21 @@ def plot_models(i, j, axes, df, lat, min_depth, max_depth):
     vi = griddata((df["Depth"], df["Long"]), df["Vp"], (xi, zi), method="cubic")
 
     # plot subplots
-    cl = axes[i, j].imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df["Vp"]), vmax=max(df["Vp"]),
+    cl = ax.imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df["Vp"]), vmax=max(df["Vp"]),
                            aspect="auto",
                            alpha=1,
                            extent=[df["Long"].min(), df["Long"].max(), df["Depth"].min(), df["Depth"].max()])
-    # cl = axes[i, j].scatter(df["Long"], df["Depth"], c=df["Vp"],  marker="s", s=10, cmap="turbo_r", vmin=min(df["Vp"]), vmax=max(df["Vp"]), alpha=1)
-    axes[i, j].tricontour(df["Long"], df["Depth"], df["Dws"], levels=[1000], linewidths=1, colors="white")
+    # cl = ax.scatter(df["Long"], df["Depth"], c=df["Vp"],  marker="s", s=10, cmap="turbo_r", vmin=min(df["Vp"]), vmax=max(df["Vp"]), alpha=1)
+    ax.tricontour(df["Long"], df["Depth"], df["Dws"], levels=[1000], linewidths=1, colors="white")
 
-    axes[i, j].set_title("Latitude = " + str(lat) + " $^\circ$N")
-    axes[i, j].set_xlabel("Longitude ($^\circ$W)")
-    axes[i, j].set_ylabel("Depth (km)")
+    ax.set_title("Latitude = " + str(lat) + " $^\circ$N")
+    ax.set_xlabel("Longitude ($^\circ$W)")
+    ax.set_ylabel("Depth (km)")
 
-    cb = plt.colorbar(cl, ax=axes[i, j], shrink=1)
+    cb = plt.colorbar(cl, ax=ax, shrink=1)
     cb.set_label("Vp (km/s)")
 
-    axes[i, j].invert_yaxis()
+    ax.invert_yaxis()
 
 
 def main(vel_file):
@@ -51,13 +51,9 @@ def main(vel_file):
     max_depth = 225
 
     # loop through each lat to add to subplots
-    for j, lat in enumerate(lat_list):
-        if j <= 2:
-            i = 0
-        else:
-            j -= 3
-            i = 1
-        plot_models(i, j, axes, df, lat, min_depth, max_depth)
+    for i, ax in enumerate(fig.axes):
+        lat = lat_list[i]
+        plot_models(ax, df, lat, min_depth, max_depth)
 
     # plt.savefig("/Users/khangvo/Downloads/test.jpeg", bbox_inches="tight")
 
