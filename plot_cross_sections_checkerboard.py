@@ -1,4 +1,4 @@
-# File Name: plot_cross_sections
+# File Name: plot_cross_sections_checkerboard
 # Author: Khang Vo
 # Date Created: 10/10/2023
 # Date Last Modified: 11/20/2023
@@ -19,27 +19,26 @@ from pyproj import Geod
 
 
 def plot_models(ax, df, profile):
-    df_control = df
     df = df[df["Profile"] == profile]
 
     # create grid and interpolate
     zi, xi = np.mgrid[df["Depth"].min():df["Depth"].max():1, df["Dist_Tot"].min():df["Dist_Tot"].max():0.1]
-    vi = griddata((df["Depth"], df["Dist_Tot"]), df["Vp"], (zi, xi), method="cubic")
+    vi = griddata((df["Depth"], df["Dist_Tot"]), df["Per"], (zi, xi), method="cubic")
 
     # plot subplots
-    cl = ax.imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df_control["Vp"]), vmax=max(df_control["Vp"]),
+    cl = ax.imshow(vi, origin="lower", cmap="seismic_r", vmin=-10, vmax=10,
                    aspect="auto",
                    alpha=1,
                    extent=[df["Dist_Tot"].min(), df["Dist_Tot"].max(), df["Depth"].min(), df["Depth"].max()])
     # cl = ax.scatter(df["Dist_Tot"], df["Depth"], c=df["Vp"],  marker="s", s=10, cmap="turbo_r", vmin=min(df["Vp"]), vmax=max(df["Vp"]), alpha=1)
-    ax.tricontour(df["Dist_Tot"], df["Depth"], df["Dws"], levels=[10000], linewidths=1, colors="white")
+    ax.tricontour(df["Dist_Tot"], df["Depth"], df["Dws"], levels=[10000], linewidths=1, colors="lime")
 
     ax.set_title("Profile = " + profile)
     ax.set_xlabel("Distance (km)")
     ax.set_ylabel("Depth (km)")
 
     cb = plt.colorbar(cl, ax=ax, shrink=1)
-    cb.set_label("Vp (km/s)")
+    cb.set_label("dVp %")
 
     ax.invert_yaxis()
 
@@ -67,7 +66,7 @@ def plot_path_profiles(vel_file, key, profile, ax):
 
 
 # function to interpolate velocities
-def interp(points, vp_values, dws_values, profile, key, min_depth, max_depth, depth_step, long_lat_linspace):
+def interp(points, per_values, dws_values, profile, key, min_depth, max_depth, depth_step, long_lat_linspace):
     # create profile
     profile_long = np.linspace(profile[0], profile[2], long_lat_linspace)
     profile_lat = np.linspace(profile[1], profile[3], long_lat_linspace)
@@ -75,7 +74,7 @@ def interp(points, vp_values, dws_values, profile, key, min_depth, max_depth, de
 
     df_list = []
     for i, depth in enumerate(profile_depth):
-        df = pd.DataFrame(columns=["Long", "Lat", "Depth", "Vp", "Dws", "Profile"])
+        df = pd.DataFrame(columns=["Long", "Lat", "Depth", "Per", "Dws", "Profile"])
         df["Long"] = profile_long
         df["Lat"] = profile_lat
         df["Depth"] = profile_depth[i]
@@ -92,9 +91,9 @@ def interp(points, vp_values, dws_values, profile, key, min_depth, max_depth, de
     df_combined["Dist_Tot"] = df_combined.groupby(by=["Depth"])["Dist"].transform(lambda x: x.cumsum())
 
     for k in range(len(df_combined)):
-        dvp_request = np.array([df_combined.loc[k, "Long"], df_combined.loc[k, "Lat"], df_combined.loc[k, "Depth"]])
-        dvp = interpn(points, vp_values, dvp_request, method="linear", bounds_error=False, fill_value=None)
-        df_combined.loc[k, "Vp"] = float(dvp)
+        per_request = np.array([df_combined.loc[k, "Long"], df_combined.loc[k, "Lat"], df_combined.loc[k, "Depth"]])
+        dper = interpn(points, per_values, per_request, method="linear", bounds_error=False, fill_value=None)
+        df_combined.loc[k, "Per"] = float(dper)
         dws_request = np.array([df_combined.loc[k, "Long"], df_combined.loc[k, "Lat"], df_combined.loc[k, "Depth"]])
         dws = interpn(points, dws_values, dws_request, method="linear", bounds_error=False, fill_value=None)
         df_combined.loc[k, "Dws"] = float(dws)
@@ -103,19 +102,29 @@ def interp(points, vp_values, dws_values, profile, key, min_depth, max_depth, de
 
 
 # function to create 3D velocity model for interpolation
-def create_model(vel_file):
-    df = pd.read_csv(vel_file, delim_whitespace=True, dtype=object, usecols=range(6))
-    df.columns = ["Long", "Lat", "Depth", "Num1", "Vp", "Dws"]
-    df = df.apply(pd.to_numeric, errors="coerce").dropna()
+def create_model(file_list):
+    for file in file_list:
+        if "MOD" in file:
+            df_mod = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(5))
+            df_mod.columns = ["Long", "Lat", "Depth", "Num1", "Vp"]
+        elif "vel" in file:
+            df_vel = pd.read_csv(file, delim_whitespace=True, dtype=object, usecols=range(6))
+            df_vel.columns = ["Long", "Lat", "Depth", "Num1", "Vp", "Dws"]
+
+    df_merged = pd.merge(df_mod, df_vel, how="left", on=["Long", "Lat", "Depth"])
+
+    df_merged = df_merged[0:df_merged[df_merged["Long"] == ">"].index[0]].apply(pd.to_numeric, errors="coerce").dropna()
+
+    df_merged["Per"] = ((df_merged["Vp_y"] - df_merged["Vp_x"]) / df_merged["Vp_x"]) * 100
 
     # extract the list of coordinates
-    xs = np.array(df["Long"].to_list())
-    ys = np.array(df["Lat"].to_list())
-    zs = np.array(df["Depth"].to_list())
+    xs = np.array(df_merged["Long"].to_list())
+    ys = np.array(df_merged["Lat"].to_list())
+    zs = np.array(df_merged["Depth"].to_list())
     # extract the associated velocity values
-    vs = np.array(df["Vp"].to_list())
+    ps = np.array(df_merged["Per"].to_list())
     # extract the associated dws values
-    dws = np.array(df["Dws"].to_list())
+    dws = np.array(df_merged["Dws"].to_list())
 
     px, ix = np.unique(xs, return_inverse=True)
     py, iy = np.unique(ys, return_inverse=True)
@@ -123,16 +132,16 @@ def create_model(vel_file):
 
     points = (px, py, pz)
 
-    vp_values = np.empty_like(vs, shape=(px.size, py.size, pz.size))
-    vp_values[ix, iy, iz] = vs
+    per_values = np.empty_like(ps, shape=(px.size, py.size, pz.size))
+    per_values[ix, iy, iz] = ps
 
     dws_values = np.empty_like(dws, shape=(px.size, py.size, pz.size))
     dws_values[ix, iy, iz] = dws
 
-    return points, vp_values, dws_values
+    return points, per_values, dws_values
 
 
-def main(vel_file):
+def main(file_list, vel_file):
     min_depth = 25
     max_depth = 225
     depth_step = 10
@@ -148,34 +157,39 @@ def main(vel_file):
     profile_names = ["A", "B", "C", "D", "E", "F"]
     profiles = dict(zip(profile_names, profiles_list))
 
-    points, vp_values, dws_values = create_model(vel_file)
+    points, per_values, dws_values = create_model(file_list)
 
     # loop through each depth to add to subplots
     df_list = []
     for i, profile in enumerate(profiles):
-        df = interp(points, vp_values, dws_values, profiles[profile], profile, min_depth, max_depth, depth_step,
+        df = interp(points, per_values, dws_values, profiles[profile], profile, min_depth, max_depth, depth_step,
                     long_lat_linspace)
         df_list.append(df)
     df_combined = pd.concat(df_list, axis=0).reset_index(drop=True)
     df_combined["Dws"] = df_combined["Dws"].astype(float)
 
-    # create main plot
-    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(19, 9))
-    # loop through each profile to add to subplots
-    for i, ax in enumerate(fig.axes):
-        profile = profile_names[i]
-        plot_models(ax, df_combined, profile)
-
     # # create main plot
-    # fig, ax = plt.subplots(figsize=(19, 9))
-    # for key in profiles:
-    #     plot_path_profiles(vel_file, key, profiles[key], ax)
+    # fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(19, 9))
+    # # loop through each profile to add to subplots
+    # for i, ax in enumerate(fig.axes):
+    #     profile = profile_names[i]
+    #     plot_models(ax, df_combined, profile)
+
+    # create main plot
+    fig, ax = plt.subplots(figsize=(19, 9))
+    for key in profiles:
+        plot_path_profiles(vel_file, key, profiles[key], ax)
 
     plt.show()
 
 
 # run main()
 if __name__ == "__main__":
+
+    root = "/Users/khangvo/Downloads/"
+
+    file_list = glob.glob(root + "*MOD.*") + sorted(glob.glob(root + "*.vel.*"))
+
     vel_file = "/Users/khangvo/Downloads/tomoDD.vel.001.005"
 
-    main(vel_file)
+    main(file_list, vel_file)
