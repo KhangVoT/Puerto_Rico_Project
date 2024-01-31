@@ -55,7 +55,7 @@ def plot_models(ax, df, depth):
 def main(file_list, depth_list, lon_min, lon_max, lat_min, lat_max):
     # create main plot
     fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(24, 12))
-    # fig.suptitle("Checkerboard Test (D2 = 5 +-10%)", fontsize=18, y=0.95)
+    # fig.suptitle("Checkerboard Test (D2 = 1.5 +-10%)", fontsize=18, y=0.95)
 
     for file in file_list:
         if "MOD" in file:

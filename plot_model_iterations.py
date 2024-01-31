@@ -58,7 +58,7 @@ def plot_models(max_i, i, j, axes, df_control, df, depth):
 
 def main(file_list, depth_list):
     # create main plot
-    fig, axes = plt.subplots(nrows=len(depth_list), ncols=len(file_list), figsize=(19, 9), constrained_layout=True)
+    fig, axes = plt.subplots(nrows=len(depth_list), ncols=len(file_list), figsize=(8, 12), constrained_layout=True)
     # fig.suptitle("Velocity Models (Perturbation)", fontsize=18, y=0.95)
 
     # create control file to set global color bar
@@ -80,7 +80,7 @@ def main(file_list, depth_list):
         for j, depth in enumerate(depth_list):
             plot_models(len(file_list) - 1, i, j, axes, df_control, df, depth)
 
-    plt.savefig("/Users/khangvo/Downloads/Velocity_Models_perturb.jpeg")
+    plt.savefig("/Users/khangvo/Downloads/Velocity_Models_perturb.jpeg", bbox_inches="tight")
 
     plt.show()
 
