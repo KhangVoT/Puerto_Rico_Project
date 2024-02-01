@@ -166,10 +166,10 @@ def main(vel_file):
         profile = profile_names[i]
         plot_models(ax, df_combined, profile)
 
-    # # create main plot
-    # fig, ax = plt.subplots(figsize=(19, 9))
-    # for key in profiles:
-    #     plot_path_profiles(vel_file, key, profiles[key], ax)
+    # create main plot
+    fig, ax = plt.subplots(figsize=(19, 9))
+    for key in profiles:
+        plot_path_profiles(vel_file, key, profiles[key], ax)
 
     plt.show()
 

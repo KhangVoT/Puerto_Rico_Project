@@ -168,12 +168,12 @@ def main(file_list, vel_file):
     df_combined = pd.concat(df_list, axis=0).reset_index(drop=True)
     df_combined["Dws"] = df_combined["Dws"].astype(float)
 
-    # # create main plot
-    # fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(19, 9))
-    # # loop through each profile to add to subplots
-    # for i, ax in enumerate(fig.axes):
-    #     profile = profile_names[i]
-    #     plot_models(ax, df_combined, profile)
+    # create main plot
+    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(19, 9))
+    # loop through each profile to add to subplots
+    for i, ax in enumerate(fig.axes):
+        profile = profile_names[i]
+        plot_models(ax, df_combined, profile)
 
     # create main plot
     fig, ax = plt.subplots(figsize=(19, 9))
