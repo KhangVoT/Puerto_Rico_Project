@@ -133,18 +133,18 @@ def create_model(vel_file):
 
 
 def main(vel_file):
-    min_depth = 25
+    min_depth = 0
     max_depth = 225
     depth_step = 10
     long_lat_linspace = 10
 
     profiles_list = []
     profiles_list.append([-73.44, 17.26, -72.35, 20.90])
-    profiles_list.append([-69.29, 17.32, -68.80, 20.02])
-    profiles_list.append([-66.51, 17.36, -66.33, 19.26])
-    profiles_list.append([-63.47, 16.97, -62.59, 18.93])
-    profiles_list.append([-62.30, 15.39, -60.43, 16.19])
-    profiles_list.append([-62.05, 13.79, -60.08, 13.25])
+    profiles_list.append([-66.51, 17.36, -64.56, 19.70])
+    profiles_list.append([-62.83, 16.22, -60.58, 17.92])
+    profiles_list.append([-63.11, 11.53, -61.93, 9.28])
+    profiles_list.append([-72.65, 6.02, -71.03, 8.71])
+    profiles_list.append([-77.66, 5.61, -76.27, 7.67])
     profile_names = ["A", "B", "C", "D", "E", "F"]
     profiles = dict(zip(profile_names, profiles_list))
 
