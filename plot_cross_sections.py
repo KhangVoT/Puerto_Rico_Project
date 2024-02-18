@@ -23,7 +23,7 @@ def plot_models(ax, df, profile):
     df = df[df["Profile"] == profile]
 
     # create grid and interpolate
-    zi, xi = np.mgrid[df["Depth"].min():df["Depth"].max():1, df["Dist_Tot"].min():df["Dist_Tot"].max():0.1]
+    zi, xi = np.mgrid[df["Depth"].min():df["Depth"].max():0.1, df["Dist_Tot"].min():df["Dist_Tot"].max():0.1]
     vi = griddata((df["Depth"], df["Dist_Tot"]), df["Vp"], (zi, xi), method="cubic")
 
     # plot subplots
@@ -176,6 +176,6 @@ def main(vel_file):
 
 # run main()
 if __name__ == "__main__":
-    vel_file = "/Users/khangvo/Downloads/tomoDD.vel.001.005"
+    vel_file = "/Users/khangvo/Downloads/tomoDD.vel.001.025"
 
     main(vel_file)

@@ -45,7 +45,7 @@ def plot_models(ax, df_control, df, df_events, depth):
     cl = ax.imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df["Vp"]), vmax=max(df["Vp"]), alpha=1,
                    extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
-    ax.scatter(df_events["glon"], df_events["glat"], c="black", s=df_events["mb"], alpha=1)
+    # ax.scatter(df_events["glon"], df_events["glat"], c="black", s=df_events["mb"], alpha=1)
 
     ax.tricontour(df["Long"], df["Lat"], df["Dws"], levels=[10000], linewidths=1, colors="white")
 
