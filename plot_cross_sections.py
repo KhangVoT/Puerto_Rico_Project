@@ -43,6 +43,8 @@ def plot_models(ax, df, profile):
 
     ax.invert_yaxis()
 
+    plt.savefig("/Users/khangvo/Downloads/Cross_Sections.jpeg", bbox_inches="tight")
+
 
 def plot_path_profiles(vel_file, key, profile, ax):
     df = pd.read_csv(vel_file, delim_whitespace=True, dtype=object, usecols=range(6))
@@ -64,6 +66,8 @@ def plot_path_profiles(vel_file, key, profile, ax):
     ax.plot(profile_long, profile_lat, c="hotpink")
     ax.annotate(key, xy=(profile[0] - 1, profile[1] - 1))
     ax.annotate(key + "'", xy=(profile[2] + 1, profile[3] + 1))
+
+    plt.savefig("/Users/khangvo/Downloads/Path_Profiles.jpeg", bbox_inches="tight")
 
 
 # function to interpolate velocities
