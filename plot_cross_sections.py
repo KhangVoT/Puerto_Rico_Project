@@ -147,7 +147,7 @@ def main(vel_file):
     profiles_list.append([-66.51, 17.36, -64.56, 19.70])
     profiles_list.append([-62.83, 16.22, -60.58, 17.92])
     profiles_list.append([-63.11, 11.53, -61.93, 9.28])
-    profiles_list.append([-72.65, 6.02, -71.03, 8.71])
+    profiles_list.append([-73.37, 7.09, -70.51, 7.09])
     profiles_list.append([-77.66, 5.61, -76.27, 7.67])
     profile_names = ["A", "B", "C", "D", "E", "F"]
     profiles = dict(zip(profile_names, profiles_list))

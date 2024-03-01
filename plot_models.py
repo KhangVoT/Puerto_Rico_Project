@@ -20,7 +20,7 @@ def plot_models(ax, df_control, df, df_events, depth):
     # cut df_vp to desired depth
     df = df[df["Depth"] == depth].astype(float)
 
-    # cut df_vp to desired depth
+    # cut df_events to desired depth
     df_events = df_events[(df_events["depth"] >= depth - 10) & (df_events["depth"] <= depth + 10)]
 
     # build a regular grid with n cells
