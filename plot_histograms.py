@@ -26,7 +26,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
 
     df_reg["depth"].hist(ax=ax[0], bins=50, color="red", alpha=0.5, histtype="bar", edgecolor="black")
 
-    ax[0].set_title("Regional Data")
+    ax[0].set_title("Regional Events")
     ax[0].set_xlabel("Depth (km)")
     ax[0].set_ylabel("Number of Earthquakes")
     ax[0].grid(True)
@@ -37,7 +37,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
 
     df_glb["depth"].hist(ax=ax[1], bins=50, color="red", alpha=0.5, histtype="bar", edgecolor="black")
 
-    ax[1].set_title("Global Data")
+    ax[1].set_title("Global Events")
     ax[1].set_xlabel("Depth (km)")
     ax[1].set_ylabel("Number of Earthquakes")
     ax[1].grid(True)

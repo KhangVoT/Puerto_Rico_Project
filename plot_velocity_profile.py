@@ -15,14 +15,12 @@ depth_new = np.insert(depth_new, 0, -100)
 vel_new = np.interp(depth_new, depth, velP)
 vel_new = vel_new.round(4)
 
-for i in range(len(vel_new)):
-    print(vel_new[i])
+print(depth_new)
 print(vel_new)
 
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
+fig, ax = plt.subplots(figsize=(5, 10), constrained_layout=True)
 ax.plot(velP, depth, "g-", vel_new, depth_new, "or", linewidth=1.5)
-ax.set_xlabel("vP (km/s)")
+ax.set_xlabel("Vp (km/s)")
 # ax.set_xlim(0, max(velP))
 ax.xaxis.set_label_position("top")
 ax.xaxis.set_ticks_position("top")
@@ -32,7 +30,7 @@ ax.invert_yaxis()
 ax.yaxis.set_label_position("left")
 ax.yaxis.set_ticks_position("left")
 ax.yaxis.grid(linestyle="-", color="gray")
-plt.title("MIT Interpolated")
+plt.title("MIT-P08 Interpolated")
 
 plt.savefig("/Users/khangvo/Downloads/Velocity_Profile.jpeg", bbox_inches="tight")
 

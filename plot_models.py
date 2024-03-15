@@ -21,14 +21,14 @@ def plot_models(ax, df_control, df, df_events, depth):
     df = df[df["Depth"] == depth].astype(float)
 
     # cut df_events to desired depth
-    df_events = df_events[(df_events["depth"] >= depth - 10) & (df_events["depth"] <= depth + 10)]
+    df_events = df_events[(df_events["depth"] >= depth - 5) & (df_events["depth"] <= depth + 5)]
 
     # build a regular grid with n cells
     xi, yi = np.meshgrid(np.arange(df["Long"].min(), df["Long"].max(), 0.1),
                          np.arange(df["Lat"].min(), df["Lat"].max(), 0.1))
 
     # do radial basic function interpolation for Vp
-    rbfi = Rbf(df["Long"], df["Lat"], df["Vp"], function="multiquadric", smooth=0.1)
+    rbfi = Rbf(df["Long"], df["Lat"], df["Vp"], function="multiquadric", smooth=0.5)
     vi = rbfi(xi, yi)
 
     # cut df_control to desired depth
@@ -45,7 +45,7 @@ def plot_models(ax, df_control, df, df_events, depth):
     cl = ax.imshow(vi, origin="lower", cmap="turbo_r", vmin=min(df["Vp"]), vmax=max(df["Vp"]), alpha=1,
                    extent=[df["Long"].min(), df["Long"].max(), df["Lat"].min(), df["Lat"].max()])
 
-    # ax.scatter(df_events["glon"], df_events["glat"], c="black", s=df_events["mb"], alpha=1)
+    # ax.scatter(df_events["glon"], df_events["glat"], c="black", s=df_events["mb"], alpha=0.3)
 
     ax.tricontour(df["Long"], df["Lat"], df["Dws"], levels=[10000], linewidths=1, colors="white")
 
@@ -103,8 +103,8 @@ if __name__ == "__main__":
     # master events
     events_master = "/Users/khangvo/PycharmProjects/Puerto_Rico_Project/files/04_TeletomoDD_files/master_event.txt"
 
-    # depth_list = [12.0, 40.0, 75.0, 120.0, 185.0, 225.0]
-    depth_list = [25.0, 40.0, 55.0, 75.0, 95.0, 120.0, 150.0, 185.0, 225.0]
+    # depth_list = [25.0, 40.0, 55.0, 75.0, 95.0, 120.0, 150.0, 185.0, 225.0]
+    depth_list = [12.0, 25.0, 40.0, 55.0, 75.0, 95.0, 120.0, 150.0, 185.0]
 
     # user specified study area data extent
     lon_min = -80

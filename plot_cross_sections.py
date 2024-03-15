@@ -64,8 +64,8 @@ def plot_path_profiles(vel_file, key, profile, ax):
     profile_lat = np.linspace(profile[1], profile[3], 2)
 
     ax.plot(profile_long, profile_lat, c="hotpink")
-    ax.annotate(key, xy=(profile[0] - 1, profile[1] - 1))
-    ax.annotate(key + "'", xy=(profile[2] + 1, profile[3] + 1))
+    ax.annotate(key, xy=(profile[0], profile[1]))
+    ax.annotate(key + "'", xy=(profile[2], profile[3]))
 
     plt.savefig("/Users/khangvo/Downloads/Path_Profiles.jpeg", bbox_inches="tight")
 
@@ -138,17 +138,17 @@ def create_model(vel_file):
 
 def main(vel_file):
     min_depth = 0
-    max_depth = 225
+    max_depth = 75
     depth_step = 10
     long_lat_linspace = 10
 
     profiles_list = []
-    profiles_list.append([-73.44, 17.26, -72.35, 20.90])
-    profiles_list.append([-66.51, 17.36, -64.56, 19.70])
-    profiles_list.append([-62.83, 16.22, -60.58, 17.92])
-    profiles_list.append([-63.11, 11.53, -61.93, 9.28])
-    profiles_list.append([-73.37, 7.09, -70.51, 7.09])
-    profiles_list.append([-77.66, 5.61, -76.27, 7.67])
+    profiles_list.append([-72.94, 17.50, -72.67, 19.08])
+    profiles_list.append([-65.10, 18.41, -64.20, 20.29])
+    profiles_list.append([-61.81, 16.96, -60.51, 17.75])
+    profiles_list.append([-62.84, 11.18, -62.53, 9.83])
+    profiles_list.append([-72.64, 7.31, -71.27, 7.31])
+    profiles_list.append([-78.02, 6.16, -76.02, 7.67])
     profile_names = ["A", "B", "C", "D", "E", "F"]
     profiles = dict(zip(profile_names, profiles_list))
 

@@ -43,6 +43,7 @@ def combine_abs(teletomoDD_file_path):
         df_merged_path = teletomoDD_file_path + "/master_obs.txt"
         df_merged.to_csv(df_merged_path, index=False, header=False, quoting=csv.QUOTE_NONE, escapechar=" ")
 
+
 def main(teletomoDD_file_path):
     combine_event(teletomoDD_file_path)
 

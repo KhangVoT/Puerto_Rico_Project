@@ -35,7 +35,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     m.drawparallels(np.arange(-90, 90, 10), labels=[1, 0, 0, 0], linewidth=0.001, xoffset=0.5, yoffset=0.5)
     m.drawmeridians(np.arange(0, 360, 10), labels=[0, 0, 0, 1], linewidth=0.001, xoffset=0.5, yoffset=0.5)
 
-    ax[0].set_title("Regional Data")
+    ax[0].set_title("Regional Events")
     ax[0].xaxis.set_major_locator(ticker.MultipleLocator(10))
     ax[0].yaxis.set_major_locator(ticker.MultipleLocator(10))
     ax[0].tick_params(labelleft=False, labelright=False, labeltop=False, labelbottom=False)
@@ -69,7 +69,7 @@ def main(events_reg, events_glb, lon_min, lon_max, lat_min, lat_max):
     m.drawcoastlines()
     m.shadedrelief(scale=0.5)
 
-    ax[1].set_title("Global Data")
+    ax[1].set_title("Global Events")
 
     cl = m.scatter(df_glb["glon"], df_glb["glat"], latlon=True, c=df_glb["depth"], s=df_glb["mb"], cmap="turbo", vmin=min(df_glb["depth"]), vmax=max(df_glb["depth"]), alpha=1)
 
